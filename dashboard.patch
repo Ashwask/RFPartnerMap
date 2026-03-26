@@ -1,0 +1,126 @@
+--- /Users/ashwinkulkarni/Documents/Urban Tracker/Partner Map/dashboard.html	2026-03-23 22:40:33
++++ temp_partner_map/dashboard.html	2026-03-23 22:59:13
+@@ -88,9 +88,9 @@
+     <p>Layer 1: HQ locations. Click a partner to see Layer 2: their geographies of work highlighted on the map.</p>
+   </div>
+   <div class="stats">
+-    <div class="stat"><div class="n" id="s-total">93</div><div class="l">Partners</div></div>
+-    <div class="stat"><div class="n" id="s-cities">30</div><div class="l">Cities</div></div>
+-    <div class="stat"><div class="n" id="s-states">18</div><div class="l">States</div></div>
++    <div class="stat"><div class="n" id="s-total">92</div><div class="l">Partners</div></div>
++    <div class="stat"><div class="n" id="s-cities">28</div><div class="l">Cities</div></div>
++    <div class="stat"><div class="n" id="s-states">28</div><div class="l">States / UTs</div></div>
+   </div>
+ </div>
+ 
+@@ -129,7 +129,7 @@
+     </div>
+   </div>
+   <div class="sidebar">
+-    <div class="sb-head">Partner List <span id="sb-count" style="font-weight:400">(93)</span></div>
++    <div class="sb-head">Partner List <span id="sb-count" style="font-weight:400">(92)</span></div>
+     <div class="sb-list" id="sb-list"></div>
+   </div>
+ </div>
+@@ -163,7 +163,9 @@
+         var name = f.properties.ST_NM || f.properties.NAME_1 || '';
+         if(name) layer.bindTooltip(name,{sticky:true,className:'state-tip'});
+       }
+-    }).addTo(map);
++    });
++    if(document.getElementById('lyr-states').checked) statesLayer.addTo(map);
++    if(selectedPartner) highlightStates(selectedPartner);
+   })
+   .catch(function(e){console.warn('State boundaries unavailable',e);});
+ 
+@@ -200,18 +202,48 @@
+ 
+ // State name normalization for matching GeoJSON
+ var STATE_ALIAS = {
+-  'pan india':null,'nct of delhi':'NCT of Delhi','delhi':'NCT of Delhi','delhi ncr':'NCT of Delhi',
++  'pan india':null,'nct of delhi':'Delhi','delhi':'Delhi','delhi ncr':'Delhi',
+   'karnataka':'Karnataka','maharashtra':'Maharashtra','tamil nadu':'Tamil Nadu',
+-  'kerala':'Kerala','telangana':'Telangana','andhra pradesh':'Andhra Pradesh',
+-  'west bengal':'West Bengal','odisha':'Odisha','uttar pradesh':'Uttar Pradesh',
++  'kerala':'Kerala','telangana':'Andhra Pradesh','andhra pradesh':'Andhra Pradesh',
++  'west bengal':'West Bengal','odisha':'Orissa','orissa':'Orissa','uttar pradesh':'Uttar Pradesh',
+   'rajasthan':'Rajasthan','madhya pradesh':'Madhya Pradesh','gujarat':'Gujarat',
+-  'bihar':'Bihar','jharkhand':'Jharkhand','assam':'Assam','uttarakhand':'Uttarakhand',
++  'bihar':'Bihar','jharkhand':'Jharkhand','assam':'Assam','uttarakhand':'Uttaranchal','uttaranchal':'Uttaranchal',
+   'himachal pradesh':'Himachal Pradesh','goa':'Goa','chhattisgarh':'Chhattisgarh',
+   'meghalaya':'Meghalaya','arunachal pradesh':'Arunachal Pradesh','sikkim':'Sikkim',
+   'nagaland':'Nagaland','mizoram':'Mizoram','haryana':'Haryana',
+-  'jammu & kashmir':'Jammu & Kashmir','northeast india':'Assam'
++  'jammu & kashmir':'Jammu and Kashmir','jammu and kashmir':'Jammu and Kashmir',
++  'andaman and nicobar':'Andaman and Nicobar','andaman and nicobar islands':'Andaman and Nicobar',
++  'andaman & nicobar':'Andaman and Nicobar','lakshadweep':'Lakshadweep',
++  'northeast india':null
+ };
+ 
++function getStatsStateName(s){
++  var lower = s.toLowerCase().trim();
++  if(lower==='pan india') return null;
++  if(lower==='nct of delhi') return 'Delhi';
++  if(lower==='orissa') return 'Odisha';
++  if(lower==='uttaranchal') return 'Uttarakhand';
++  if(lower==='jammu and kashmir') return 'Jammu & Kashmir';
++  if(lower==='andaman and nicobar') return 'Andaman and Nicobar Islands';
++  return s.trim();
++}
++
++function updateHeaderStats(partners){
++  var cities = {};
++  var workStates = {};
++  partners.forEach(function(p){
++    var city = (p.geo||'').split(',')[0].trim();
++    if(city && city.toLowerCase()!=='pan india') cities[city] = true;
++    p.states.forEach(function(state){
++      var label = getStatsStateName(state);
++      if(label) workStates[label] = true;
++    });
++  });
++  document.getElementById('s-total').textContent = partners.length;
++  document.getElementById('s-cities').textContent = Object.keys(cities).length;
++  document.getElementById('s-states').textContent = Object.keys(workStates).length;
++}
++
+ function normalizeState(s){
+   var lower = s.toLowerCase().trim();
+   if(lower in STATE_ALIAS) return STATE_ALIAS[lower];
+@@ -222,6 +254,7 @@
+   // Remove old highlight
+   if(geoLayer){map.removeLayer(geoLayer);geoLayer=null;}
+   if(!statesGeoJSON||!partner) return;
++  var showGeo = document.getElementById('lyr-geo').checked;
+ 
+   var isPanIndia = partner.states.some(function(s){return s==='Pan India';});
+ 
+@@ -229,7 +262,8 @@
+     // Highlight all states
+     geoLayer = L.geoJSON(statesGeoJSON,{
+       style:function(){return{color:CAT_COL[partner.cat]||'#16796e',weight:2.5,fillColor:CAT_COL[partner.cat]||'#16796e',fillOpacity:0.15,dashArray:''};}
+-    }).addTo(map);
++    });
++    if(showGeo) geoLayer.addTo(map);
+   } else {
+     var normalized = partner.states.map(normalizeState).filter(Boolean);
+     var matchedFeatures = {type:'FeatureCollection',features:[]};
+@@ -248,7 +282,8 @@
+       var col = CAT_COL[partner.cat]||'#16796e';
+       geoLayer = L.geoJSON(matchedFeatures,{
+         style:function(){return{color:col,weight:2.5,fillColor:col,fillOpacity:0.18,dashArray:''};}
+-      }).addTo(map);
++      });
++      if(showGeo) geoLayer.addTo(map);
+     }
+   }
+ }
+@@ -308,7 +343,7 @@
+   // Sidebar
+   var list = document.getElementById('sb-list');
+   document.getElementById('sb-count').textContent = '('+pts.length+')';
+-  document.getElementById('s-total').textContent = pts.length;
++  updateHeaderStats(pts);
+   list.innerHTML = pts.map(function(p){
+     var col = CAT_COL[p.cat]||'#16796e';
+     return '<div class="sb-item" data-name="'+p.name.replace(/"/g,'&quot;')+'">'

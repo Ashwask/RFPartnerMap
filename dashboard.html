@@ -1,0 +1,2033 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Partner Map · India</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<script src="https://unpkg.com/leaflet.markercluster@1.5.3/dist/leaflet.markercluster.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.css"/>
+<link rel="stylesheet" href="https://unpkg.com/leaflet.markercluster@1.5.3/dist/MarkerCluster.Default.css"/>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#eee5d3;--surf:rgba(255,253,249,.88);--surf-strong:rgba(255,253,249,.96);
+  --dark:#18252c;--ink-soft:#36505b;--teal:#16796e;--gold:#c4921a;--green:#1a7847;--orange:#c96a28;
+  --muted:#5a7480;--line:rgba(24,37,44,.1);--line-strong:rgba(24,37,44,.16);
+  --shadow:0 16px 48px rgba(24,37,44,.12);--shadow-soft:0 8px 24px rgba(24,37,44,.08);--radius:24px;
+}
+body{
+  font-family:"Avenir Next","Segoe UI",system-ui,sans-serif;color:var(--dark);min-height:100vh;
+  background:
+    radial-gradient(circle at top left, rgba(22,121,110,.16), transparent 26%),
+    radial-gradient(circle at 84% 12%, rgba(196,146,26,.16), transparent 18%),
+    radial-gradient(circle at 18% 88%, rgba(26,120,71,.1), transparent 22%),
+    linear-gradient(180deg, #f8f2e6 0%, #ebe2cf 100%);
+}
+body::before,body::after{
+  content:"";position:fixed;border-radius:50%;filter:blur(56px);opacity:.38;pointer-events:none;z-index:0
+}
+body::before{width:20rem;height:20rem;top:-7rem;right:-6rem;background:rgba(22,121,110,.18)}
+body::after{width:24rem;height:24rem;bottom:-10rem;left:-6rem;background:rgba(201,106,40,.16)}
+.page-shell{position:relative;z-index:1;width:min(1560px,calc(100vw - 28px));margin:18px auto 24px}
+
+/* HEADER */
+.header{
+  background:
+    linear-gradient(135deg, rgba(24,37,44,.96), rgba(24,37,44,.9)),
+    var(--dark);
+  padding:28px 30px;color:#fff;display:flex;align-items:flex-start;gap:28px;flex-wrap:wrap;
+  border-radius:calc(var(--radius) + 4px);box-shadow:var(--shadow);overflow:hidden;position:relative
+}
+.header::before{
+  content:"";position:absolute;right:-4rem;top:-4rem;width:18rem;height:18rem;border-radius:42% 58% 55% 45%;
+  background:linear-gradient(145deg, rgba(22,121,110,.22), rgba(196,146,26,.12))
+}
+.header-copy{position:relative;z-index:1;max-width:54rem}
+.eyebrow{
+  display:inline-flex;align-items:center;padding:7px 12px;border-radius:999px;background:rgba(255,255,255,.08);
+  font-size:.68rem;letter-spacing:.14em;text-transform:uppercase;color:rgba(255,255,255,.72);margin-bottom:14px
+}
+.header-text h1{
+  font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;font-size:clamp(2rem,3.3vw,3.4rem);
+  line-height:.98;font-weight:700;letter-spacing:-.04em;margin-bottom:8px
+}
+.header-text p{font-size:.9rem;color:rgba(255,255,255,.62);max-width:44rem;line-height:1.62}
+.guide-row{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+.guide-chip{
+  padding:9px 12px;border-radius:999px;font-size:.78rem;color:rgba(255,255,255,.82);
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.09)
+}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(110px,1fr));gap:12px;margin-left:auto;min-width:min(100%,360px);position:relative;z-index:1}
+.stat{
+  background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.08);border-radius:18px;
+  padding:16px 14px;backdrop-filter:blur(14px)
+}
+.stat .n{font-size:1.9rem;font-weight:800;color:#fff;line-height:1}
+.stat .l{margin-top:6px;font-size:.62rem;text-transform:uppercase;letter-spacing:.12em;color:rgba(255,255,255,.46)}
+
+/* CONTROLS */
+.controls{
+  margin-top:14px;padding:16px 18px;background:var(--surf);border:1px solid rgba(255,255,255,.7);
+  border-radius:var(--radius);display:grid;grid-template-columns:minmax(0,1.65fr) minmax(260px,.85fr);
+  gap:16px;box-shadow:var(--shadow-soft);backdrop-filter:blur(18px)
+}
+.controls label{font-size:.65rem;text-transform:uppercase;letter-spacing:.11em;color:var(--muted);font-weight:700}
+.controls-main{display:grid;gap:14px}
+.control-block{display:grid;gap:8px}
+.search-wrap{display:flex;gap:10px;align-items:center}
+.search-input{
+  width:100%;padding:13px 16px;border-radius:16px;border:1px solid var(--line);background:rgba(255,255,255,.92);
+  color:var(--dark);font:inherit;font-size:.9rem;box-shadow:inset 0 1px 0 rgba(255,255,255,.7)
+}
+.search-input:focus{outline:none;border-color:rgba(22,121,110,.5);box-shadow:0 0 0 4px rgba(22,121,110,.12)}
+.filter-row{display:grid;grid-template-columns:minmax(180px,.6fr) minmax(0,1fr);gap:14px;align-items:end}
+.active-filters{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
+.filter-chip{
+  display:inline-flex;align-items:center;gap:6px;padding:6px 12px;border-radius:999px;font-size:.76rem;font-weight:600;
+  background:rgba(22,121,110,.1);border:1px solid rgba(22,121,110,.2);color:var(--teal)
+}
+.filter-chip button{
+  background:none;border:none;cursor:pointer;font-size:.9rem;color:var(--teal);padding:0;line-height:1;font-family:inherit
+}
+.filter-chip button:hover{color:var(--dark)}
+.pill-row{display:flex;gap:8px;flex-wrap:wrap}
+.pill{
+  padding:7px 14px;border-radius:999px;border:1.5px solid var(--line);background:rgba(255,255,255,.72);
+  cursor:pointer;font-size:.79rem;font-weight:600;color:var(--dark);font-family:inherit;transition:.16s ease
+}
+.pill.on{background:var(--dark);border-color:var(--dark);color:#fff;box-shadow:0 8px 18px rgba(24,37,44,.18)}
+.pill:hover:not(.on){border-color:var(--teal);color:var(--teal);transform:translateY(-1px)}
+.controls-side{display:grid;gap:14px;align-content:start;padding-left:16px;border-left:1px solid var(--line)}
+.legend{display:flex;gap:12px;flex-wrap:wrap;font-size:.74rem;color:var(--muted)}
+.legend span::before{content:'';display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:4px;vertical-align:middle}
+.legend .lu::before{background:var(--teal)}.legend .lr::before{background:var(--gold)}
+.legend .lc::before{background:var(--green)}.legend .lb::before{background:var(--orange)}
+.action-row{display:flex;gap:8px;flex-wrap:wrap}
+.secondary-btn{
+  display:inline-flex;align-items:center;justify-content:center;
+  border:1px solid var(--line-strong);background:rgba(255,255,255,.78);color:var(--dark);cursor:pointer;
+  padding:10px 12px;border-radius:14px;font:inherit;font-size:.8rem;font-weight:600;transition:.16s ease;
+  text-decoration:none
+}
+.secondary-btn.on{background:var(--dark);border-color:var(--dark);color:#fff;box-shadow:0 10px 22px rgba(24,37,44,.14)}
+.secondary-btn:hover{border-color:rgba(22,121,110,.36);color:var(--teal);transform:translateY(-1px)}
+.secondary-btn.on:hover{color:#fff;transform:none}
+.export-btn{
+  background:var(--teal);border-color:var(--teal);color:#fff;box-shadow:0 12px 22px rgba(22,121,110,.18)
+}
+.export-btn:hover{background:#12675f;border-color:#12675f;color:#fff;transform:translateY(-1px)}
+.focus-meta{
+  font-size:.8rem;color:var(--ink-soft);line-height:1.55;background:rgba(22,121,110,.07);
+  border:1px solid rgba(22,121,110,.12);padding:12px 14px;border-radius:16px
+}
+.sidebar-toggle,.sidebar-close{display:none}
+
+/* VIEW TABS */
+.view-tabs{
+  display:flex;gap:8px;align-items:center;margin-top:14px;padding:8px;background:rgba(255,253,249,.7);
+  border:1px solid rgba(255,255,255,.72);border-radius:18px;box-shadow:var(--shadow-soft);backdrop-filter:blur(14px)
+}
+.view-tab{
+  border:none;background:transparent;color:var(--muted);cursor:pointer;padding:11px 14px;border-radius:12px;
+  font:inherit;font-size:.82rem;font-weight:700;letter-spacing:.02em;transition:.16s ease
+}
+.view-tab:hover{background:rgba(22,121,110,.08);color:var(--teal)}
+.view-tab.on{background:var(--dark);color:#fff;box-shadow:0 10px 22px rgba(24,37,44,.16)}
+.pane{display:none}
+.pane.on{display:block}
+
+/* LAYOUT */
+.wrap{
+  margin-top:14px;display:flex;height:calc(100vh - 262px);min-height:640px;background:var(--surf);
+  border:1px solid rgba(255,255,255,.68);border-radius:calc(var(--radius) + 2px);overflow:hidden;
+  box-shadow:var(--shadow);backdrop-filter:blur(18px)
+}
+#map{flex:1;min-width:0;position:relative;background:#dbe4df}
+.sidebar{width:340px;flex-shrink:0;background:var(--surf-strong);border-left:1px solid var(--line);display:flex;flex-direction:column}
+.sidebar-top{padding:16px 18px 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.56)}
+.sb-head-row{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.sb-head{font-size:.68rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);font-weight:700}
+.sb-caption{margin-top:8px;font-size:.8rem;line-height:1.5;color:var(--ink-soft)}
+.sb-list{flex:1;overflow-y:auto}
+.sb-item{padding:14px 18px;border-bottom:1px solid var(--line);cursor:pointer;transition:.16s ease}
+.sb-item:hover{background:rgba(22,121,110,.06)}
+.sb-item.active{background:rgba(22,121,110,.1);border-left:3px solid var(--teal)}
+.sb-item.dimmed{opacity:.45}
+.sb-name{font-size:.88rem;font-weight:700;line-height:1.35}
+.sb-geo{font-size:.73rem;color:var(--muted);margin-top:2px}
+.sb-cat{display:inline-block;font-size:.65rem;padding:3px 8px;border-radius:999px;margin-top:7px;font-weight:700}
+.sb-states{font-size:.72rem;color:var(--teal);margin-top:8px;line-height:1.5}
+.sb-empty{padding:28px 20px;color:var(--muted);font-size:.86rem;line-height:1.6}
+
+/* SELECTED PARTNER INFO PANEL */
+.info-panel{
+  display:none;position:absolute;bottom:20px;left:20px;z-index:1000;background:rgba(255,253,249,.95);
+  border:1px solid rgba(255,255,255,.74);border-radius:20px;box-shadow:var(--shadow);padding:18px 20px;
+  max-width:380px;font-size:.84rem;line-height:1.6;backdrop-filter:blur(18px)
+}
+.info-panel.show{display:block}
+.info-panel h3{font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;font-size:1.2rem;line-height:1.15;margin-bottom:3px}
+.info-panel .ip-geo{font-size:.74rem;color:var(--muted);margin-bottom:8px}
+.info-panel .ip-cat{display:inline-block;font-size:.66rem;padding:4px 9px;border-radius:999px;margin-bottom:10px;font-weight:700}
+.info-panel .ip-desc{font-size:.83rem;color:var(--ink-soft);margin-bottom:10px}
+.info-panel .ip-states{font-size:.75rem;color:var(--teal);font-weight:700}
+.info-panel .ip-states span{font-weight:500;color:var(--muted)}
+.info-close{position:absolute;top:10px;right:12px;background:none;border:none;font-size:1.15rem;cursor:pointer;color:var(--muted);font-family:inherit}
+.info-close:hover{color:var(--dark)}
+
+/* LAYER TOGGLE */
+.layer-toggle{
+  position:absolute;top:18px;right:18px;z-index:1000;background:rgba(255,253,249,.94);border:1px solid rgba(255,255,255,.74);
+  border-radius:18px;box-shadow:var(--shadow-soft);padding:14px 14px 12px;font-size:.74rem;backdrop-filter:blur(18px)
+}
+.layer-toggle h4{font-size:.64rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:8px}
+.layer-toggle label{display:flex;align-items:center;gap:8px;margin-bottom:6px;cursor:pointer;color:var(--dark);font-weight:600}
+.layer-toggle label:last-child{margin-bottom:0}
+.layer-toggle input{accent-color:var(--teal)}
+
+/* LEAFLET */
+.leaflet-popup-content-wrapper{border-radius:18px;box-shadow:var(--shadow-soft)}
+.leaflet-popup-content{margin:12px 16px;font-family:inherit;font-size:.84rem;line-height:1.6}
+.leaflet-popup-content strong{display:block;font-size:1rem;margin-bottom:2px}
+.leaflet-popup-content em{font-size:.72rem;color:var(--muted);font-style:normal}
+.leaflet-popup-content .pdesc{font-size:.79rem;color:var(--ink-soft);margin-top:8px;padding-top:8px;border-top:1px solid rgba(24,37,44,.08)}
+.leaflet-popup-content .pstates{font-size:.72rem;color:var(--teal);margin-top:6px;font-weight:700}
+.leaflet-control-zoom a{
+  width:34px;height:34px;line-height:34px;border:none!important;background:rgba(255,253,249,.94)!important;color:var(--dark)!important;
+  box-shadow:var(--shadow-soft)
+}
+
+/* ARTEFACTS */
+.artefacts-shell{
+  margin-top:14px;padding:18px;background:var(--surf);border:1px solid rgba(255,255,255,.72);border-radius:calc(var(--radius) + 2px);
+  box-shadow:var(--shadow);backdrop-filter:blur(18px)
+}
+.artefacts-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.artefacts-copy h2{
+  font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;font-size:clamp(1.5rem,2.2vw,2.2rem);line-height:1.05;letter-spacing:-.03em
+}
+.artefacts-copy p{margin-top:8px;max-width:60rem;font-size:.9rem;line-height:1.65;color:var(--ink-soft)}
+.artefacts-stats{display:grid;grid-template-columns:repeat(3,minmax(110px,1fr));gap:10px;min-width:min(100%,360px)}
+.artefact-stat{padding:14px 15px;background:rgba(255,255,255,.72);border:1px solid var(--line);border-radius:16px}
+.artefact-stat .n{font-size:1.5rem;font-weight:800;color:var(--dark);line-height:1}
+.artefact-stat .l{margin-top:6px;font-size:.64rem;letter-spacing:.12em;text-transform:uppercase;color:var(--muted)}
+.artefacts-controls{
+  display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:center;margin-top:16px;padding-top:16px;border-top:1px solid var(--line)
+}
+.artefacts-layout{
+  display:grid;grid-template-columns:340px minmax(0,1fr);gap:18px;min-height:620px;margin-top:18px
+}
+.artefacts-sidebar{
+  background:rgba(255,255,255,.62);border:1px solid var(--line);border-radius:22px;overflow:hidden;display:flex;flex-direction:column;min-height:0
+}
+.artefacts-sidebar-head{padding:16px 18px 14px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.56)}
+.artefacts-sidebar-head p{margin-top:6px;font-size:.78rem;line-height:1.55;color:var(--ink-soft)}
+.artefacts-list{flex:1;overflow:auto}
+.artefact-item{
+  padding:14px 18px;border-bottom:1px solid var(--line);cursor:pointer;transition:.16s ease;background:transparent
+}
+.artefact-item:hover{background:rgba(22,121,110,.05)}
+.artefact-item.on{background:rgba(22,121,110,.1);border-left:3px solid var(--teal)}
+.artefact-org{font-size:.86rem;font-weight:700;line-height:1.35}
+.artefact-meta{margin-top:6px;display:flex;gap:6px;flex-wrap:wrap}
+.artefact-pill{
+  display:inline-flex;align-items:center;padding:4px 8px;border-radius:999px;font-size:.66rem;font-weight:700;
+  border:1px solid transparent
+}
+.artefact-pill.live{background:rgba(22,121,110,.1);border-color:rgba(22,121,110,.18);color:var(--teal)}
+.artefact-pill.pending{background:rgba(196,146,26,.12);border-color:rgba(196,146,26,.18);color:#926b07}
+.artefact-count{font-size:.69rem;color:var(--muted)}
+.artefacts-detail{
+  background:rgba(255,255,255,.62);border:1px solid var(--line);border-radius:22px;padding:22px;min-width:0
+}
+.artefacts-detail-head{display:flex;justify-content:space-between;gap:18px;align-items:flex-start;flex-wrap:wrap}
+.artefacts-detail-head h3{
+  font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;font-size:clamp(1.4rem,2vw,2.1rem);line-height:1.05;letter-spacing:-.03em
+}
+.artefacts-detail-head p{margin-top:8px;max-width:48rem;color:var(--ink-soft);line-height:1.7}
+.artefacts-status{
+  display:inline-flex;align-items:center;padding:5px 10px;border-radius:999px;font-size:.7rem;font-weight:800;
+  letter-spacing:.08em;text-transform:uppercase
+}
+.artefacts-status.live{background:rgba(22,121,110,.12);color:var(--teal)}
+.artefacts-status.pending{background:rgba(196,146,26,.14);color:#8b680d}
+.artefacts-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px;margin-top:18px}
+.artefacts-section{
+  background:rgba(255,255,255,.7);border:1px solid var(--line);border-radius:18px;padding:16px 16px 14px
+}
+.artefacts-section h4{font-size:.74rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:10px}
+.artefact-card{
+  padding:12px 12px 11px;background:rgba(24,37,44,.03);border:1px solid rgba(24,37,44,.06);border-radius:14px;margin-bottom:10px
+}
+.artefact-card:last-child{margin-bottom:0}
+.artefact-card strong{display:block;font-size:.9rem;line-height:1.35}
+.artefact-link{color:var(--teal);text-decoration:none}
+.artefact-link:hover{text-decoration:underline}
+.artefact-card em{display:block;font-style:normal;font-size:.72rem;font-weight:700;letter-spacing:.05em;text-transform:uppercase;color:var(--teal);margin-top:4px}
+.artefact-card p{margin-top:6px;font-size:.8rem;line-height:1.58;color:var(--ink-soft)}
+.artefact-sources{margin-top:18px;padding-top:16px;border-top:1px solid var(--line)}
+.artefact-sources h4{font-size:.74rem;text-transform:uppercase;letter-spacing:.12em;color:var(--muted);margin-bottom:10px}
+.artefact-sources ul{list-style:none;display:grid;gap:8px}
+.artefact-sources a{font-size:.82rem;color:var(--teal);text-decoration:none}
+.artefact-sources a:hover{text-decoration:underline}
+.artefact-empty{
+  margin-top:18px;padding:16px 18px;background:rgba(196,146,26,.08);border:1px solid rgba(196,146,26,.14);
+  border-radius:16px;color:var(--ink-soft);line-height:1.65;font-size:.84rem
+}
+/* PLACE TAB */
+.shed-legend{
+  display:flex;flex-wrap:wrap;align-items:center;gap:12px;padding:10px 14px;margin-bottom:14px;
+  background:rgba(255,255,255,.72);border:1px solid var(--line);border-radius:14px;font-size:.72rem;color:var(--ink-soft)
+}
+.shed-legend-title{font-weight:700;text-transform:uppercase;letter-spacing:.1em;font-size:.62rem;color:var(--muted)}
+.shed-leg-dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:middle}
+.shed-legend-sep{width:1px;height:16px;background:var(--line);margin:0 2px}
+.shed-layout{display:grid;grid-template-columns:340px minmax(0,1fr);gap:14px;margin-bottom:4px}
+.shed-map{border-radius:18px;overflow:hidden;border:1px solid var(--line);min-height:360px;background:#dbe4df}
+.shed-right{overflow-y:auto;max-height:420px}
+.shed-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px}
+@media(max-width:900px){.shed-layout{grid-template-columns:1fr}.shed-map{min-height:260px}}
+.shed-card{
+  padding:14px 16px;border-radius:16px;cursor:pointer;border:1.5px solid var(--line);
+  background:rgba(255,255,255,.72);transition:.16s ease;position:relative;overflow:hidden
+}
+.shed-card:hover{border-color:var(--teal);transform:translateY(-1px)}
+.shed-card.on{border-color:var(--teal);background:rgba(22,121,110,.06);box-shadow:0 8px 18px rgba(22,121,110,.1)}
+.shed-card-bar{position:absolute;top:0;left:0;right:0;height:3px}
+.shed-card h4{font-size:.86rem;font-weight:700;line-height:1.25;margin-bottom:4px}
+.shed-card-meta{display:flex;gap:8px;align-items:center;font-size:.68rem;color:var(--muted)}
+.shed-card-dots{display:flex;gap:3px;margin-top:8px}
+.shed-card-dot{width:8px;height:8px;border-radius:50%}
+.place-head{margin-bottom:16px}
+.place-head h3{font-family:"Iowan Old Style","Palatino Linotype",Georgia,serif;font-size:clamp(1.3rem,2vw,1.7rem);letter-spacing:-.03em;line-height:1.1}
+.place-head p{margin-top:6px;font-size:.82rem;color:var(--ink-soft);line-height:1.65;max-width:52rem}
+@media(max-width:680px){.shed-grid{grid-template-columns:repeat(2,1fr)}}
+
+.ip-actions{margin-top:12px;display:flex;gap:8px;flex-wrap:wrap}
+.ip-actions .secondary-btn{padding:9px 11px;font-size:.76rem}
+
+@media(max-width:1100px){
+  .controls{grid-template-columns:1fr}
+  .controls-side{padding-left:0;border-left:none;border-top:1px solid var(--line);padding-top:14px}
+  .wrap{height:calc(100vh - 320px)}
+  .artefacts-layout{grid-template-columns:1fr}
+  .artefacts-sidebar{max-height:320px}
+}
+
+@media(max-width:900px){
+  .page-shell{width:min(100vw - 18px,1560px);margin:10px auto 18px}
+  .header{padding:22px 20px}
+  .controls{padding:14px}
+  .filter-row{grid-template-columns:1fr}
+  .wrap{height:calc(100vh - 360px);min-height:540px;position:relative}
+  .sidebar{
+    display:flex;position:absolute;top:12px;right:12px;bottom:12px;z-index:1200;width:min(360px,calc(100vw - 24px));
+    border-radius:20px;border:1px solid rgba(255,255,255,.74);box-shadow:var(--shadow);transform:translateX(calc(100% + 18px));
+    transition:transform .24s ease
+  }
+  .sidebar.open{transform:translateX(0)}
+  .sidebar-toggle,.sidebar-close{display:inline-flex}
+  .sidebar-close{align-items:center;justify-content:center}
+  .layer-toggle{top:12px;left:12px;right:auto}
+  .info-panel{left:12px;right:12px;bottom:12px;max-width:none}
+  .artefacts-shell{padding:14px}
+  .artefacts-controls{grid-template-columns:1fr}
+  .artefacts-stats{grid-template-columns:repeat(3,1fr);min-width:100%}
+  .artefacts-grid{grid-template-columns:1fr}
+}
+
+@media(max-width:680px){
+  .stats{grid-template-columns:repeat(3,1fr);min-width:100%}
+  .stat{padding:14px 12px}
+  .search-wrap,.action-row{flex-direction:column}
+  .secondary-btn{width:100%;justify-content:center}
+  .layer-toggle{max-width:calc(100vw - 42px)}
+}
+</style>
+</head>
+<body>
+<div class="page-shell">
+<div class="header">
+  <div class="header-copy">
+    <div class="eyebrow">Rainmatter Partner Atlas</div>
+    <div class="header-text">
+      <h1>Partners across India</h1>
+      <p>Use the atlas to move from a national scan to a single-organisation view. HQ markers are layer 1; selecting a partner isolates its headquarters and highlights its geographies of work in layer 2.</p>
+    </div>
+    <div class="guide-row">
+      <span class="guide-chip">Search by organisation, city, or state</span>
+      <span class="guide-chip">Use portfolio filters to narrow the ecosystem</span>
+      <span class="guide-chip">Select a partner to enter focus mode</span>
+    </div>
+  </div>
+  <div class="stats">
+    <div class="stat"><div class="n" id="s-total">111</div><div class="l">Partners</div></div>
+    <div class="stat"><div class="n" id="s-cities">34</div><div class="l">Cities</div></div>
+    <div class="stat"><div class="n" id="s-states">29</div><div class="l">States / UTs</div></div>
+  </div>
+</div>
+
+<div class="view-tabs" role="tablist" aria-label="Dashboard views">
+  <button class="view-tab on" id="tab-atlas" type="button" data-view="atlas" role="tab" aria-selected="true">Atlas</button>
+  <button class="view-tab" id="tab-artefacts" type="button" data-view="artefacts" role="tab" aria-selected="false">Artefacts</button>
+  <button class="view-tab" id="tab-place" type="button" data-view="place" role="tab" aria-selected="false">Place</button>
+</div>
+
+<section class="pane on" id="pane-atlas">
+<div class="controls">
+  <div class="controls-main">
+    <div class="control-block">
+      <label for="search">Search partners</label>
+      <div class="search-wrap">
+        <input class="search-input" id="search" type="search" placeholder="Search by name, city, or keyword" autocomplete="off">
+      </div>
+    </div>
+    <div class="filter-row">
+      <div class="control-block">
+        <label for="state-filter">Filter by state</label>
+        <select class="search-input" id="state-filter" style="padding:11px 14px;cursor:pointer">
+          <option value="">All states</option>
+        </select>
+      </div>
+      <div class="control-block">
+        <label>Portfolio lens</label>
+        <div class="pill-row">
+          <button class="pill on" data-cat="all">All</button>
+          <button class="pill" data-cat="Urban">Urban</button>
+          <button class="pill" data-cat="Rural">Rural</button>
+          <button class="pill" data-cat="CnR">Conservation</button>
+          <button class="pill" data-cat="Buildings">Buildings</button>
+          <button class="pill" data-cat="Data">Data</button>
+        </div>
+      </div>
+    </div>
+    <div class="active-filters" id="active-filters" style="display:none"></div>
+  </div>
+  <div class="controls-side">
+    <div class="control-block">
+      <label>Legend</label>
+      <div class="legend">
+        <span class="lu">Urban</span>
+        <span class="lr">Rural</span>
+        <span class="lc">CnR</span>
+        <span class="lb">Buildings</span>
+      </div>
+    </div>
+    <div class="action-row">
+      <button class="secondary-btn" id="clear-all-filters" type="button">Clear all filters</button>
+      <button class="secondary-btn" id="clear-focus" type="button">Reset focus</button>
+      <a class="secondary-btn export-btn" href="rainmatter_partner_dashboard_export.xlsx?v=20260324c" download="rainmatter_partner_dashboard_export.xlsx">Export Excel</a>
+      <button class="secondary-btn sidebar-toggle" id="sidebar-toggle" type="button">Partner list</button>
+    </div>
+    <div class="focus-meta" id="focus-meta">Showing all partners across the current atlas.</div>
+  </div>
+</div>
+
+<div class="wrap">
+  <div id="map" style="position:relative">
+    <!-- Layer toggle control -->
+    <div class="layer-toggle" id="layer-toggle">
+      <h4>Layers</h4>
+      <label><input type="checkbox" id="lyr-hq" checked> HQ Locations</label>
+      <label><input type="checkbox" id="lyr-states" checked> State Boundaries</label>
+      <label><input type="checkbox" id="lyr-geo" checked> Geographies of Work</label>
+      <hr style="border:none;border-top:1px solid rgba(24,37,44,.1);margin:6px 0">
+      <h4>Network</h4>
+      <label><input type="checkbox" id="lyr-rm" checked> <span style="display:inline-block;width:8px;height:8px;border-radius:50%;background:var(--teal);vertical-align:middle;margin-right:3px"></span> Rainmatter</label>
+      <label><input type="checkbox" id="lyr-eco" checked> <span style="display:inline-block;width:8px;height:8px;border-radius:3px;background:var(--orange);vertical-align:middle;margin-right:3px"></span> Ecosystem</label>
+    </div>
+    <!-- Info panel -->
+    <div class="info-panel" id="info-panel">
+      <button class="info-close" id="info-close">&times;</button>
+      <h3 id="ip-name"></h3>
+      <div class="ip-geo" id="ip-geo"></div>
+      <span class="ip-cat" id="ip-cat"></span>
+      <span class="ip-cat" id="ip-net" style="background:rgba(0,0,0,.06);color:var(--muted)"></span>
+      <div class="ip-desc" id="ip-desc"></div>
+      <div class="ip-states"><span>Works in: </span><span id="ip-states"></span></div>
+      <div class="ip-actions">
+        <button class="secondary-btn" id="ip-open-artefacts" type="button">Open artefacts</button>
+      </div>
+    </div>
+  </div>
+  <div class="sidebar" id="sidebar">
+    <div class="sidebar-top">
+      <div class="sb-head-row">
+        <div class="sb-head">Partner List <span id="sb-count" style="font-weight:400">(111)</span></div>
+        <button class="secondary-btn sidebar-close" id="sidebar-close" type="button">Close</button>
+      </div>
+      <p class="sb-caption">Browse the current result set and select any organisation to isolate its HQ and geographies of work on the map.</p>
+    </div>
+    <div class="sb-list" id="sb-list"></div>
+  </div>
+</div>
+</section>
+
+<section class="pane" id="pane-artefacts">
+  <div class="artefacts-shell">
+    <div class="artefacts-head">
+      <div class="artefacts-copy">
+        <h2>Organisation artefacts</h2>
+        <p>This research view tracks the concrete and less tangible outputs each organisation has put into the world: tools, platforms, manuals, labs, products, campaigns, programmes, models, and convenings. The aim is to move from who they are and where they work to what they have actually built, published, institutionalised, or made reusable.</p>
+      </div>
+      <div class="artefacts-stats">
+        <div class="artefact-stat"><div class="n" id="a-orgs">111</div><div class="l">Organisations</div></div>
+        <div class="artefact-stat"><div class="n" id="a-researched">0</div><div class="l">Deep Research</div></div>
+        <div class="artefact-stat"><div class="n" id="a-items">0</div><div class="l">Artefacts Logged</div></div>
+      </div>
+    </div>
+    <div class="artefacts-controls">
+      <input class="search-input" id="artefact-search" type="search" placeholder="Search organisations, tools, programmes, campaigns, labs, or manuals" autocomplete="off">
+      <div class="action-row">
+        <button class="secondary-btn" id="artefact-filter-all" type="button">All organisations</button>
+        <button class="secondary-btn" id="artefact-filter-researched" type="button">Deep research only</button>
+        <a class="secondary-btn export-btn" href="rainmatter_partner_dashboard_export.xlsx?v=20260324c" download="rainmatter_partner_dashboard_export.xlsx">Export Excel</a>
+        <button class="secondary-btn" id="artefact-search-clear" type="button">Clear search</button>
+      </div>
+    </div>
+    <div class="artefacts-layout">
+      <div class="artefacts-sidebar">
+        <div class="artefacts-sidebar-head">
+          <div class="sb-head">Research Ledger <span id="artefact-count" style="font-weight:400">(111)</span></div>
+          <p>Select any organisation to inspect its tangible outputs and intangible operating artefacts. Atlas selection and this research pane stay in sync.</p>
+        </div>
+        <div class="artefacts-list" id="artefacts-list"></div>
+      </div>
+      <div class="artefacts-detail" id="artefacts-detail"></div>
+    </div>
+  </div>
+</section>
+
+<section class="pane" id="pane-place">
+  <div class="artefacts-shell">
+    <div class="shed-legend">
+      <span class="shed-legend-title">Place health</span>
+      <span><span class="shed-leg-dot" style="background:var(--orange)"></span>Critical</span>
+      <span><span class="shed-leg-dot" style="background:var(--gold)"></span>Declining</span>
+      <span><span class="shed-leg-dot" style="background:var(--teal)"></span>Improving</span>
+      <span><span class="shed-leg-dot" style="background:var(--muted)"></span>Stable</span>
+      <span class="shed-legend-sep"></span>
+      <span class="shed-legend-title">Ecosystem</span>
+      <span><span class="shed-leg-dot" style="background:var(--orange);opacity:.5"></span>Gap</span>
+      <span><span class="shed-leg-dot" style="background:var(--gold);opacity:.5"></span>Fragile</span>
+      <span><span class="shed-leg-dot" style="background:var(--teal);opacity:.5"></span>Present</span>
+      <span class="shed-legend-sep"></span>
+      <span class="shed-legend-title">Risks</span>
+      <span><span style="color:var(--orange);font-weight:800;margin-right:3px">!</span>Hidden dynamic</span>
+      <span><span style="color:var(--teal);margin-right:3px">&#9656;</span>Counter / alternative</span>
+      <span class="shed-legend-sep"></span>
+      <span class="shed-legend-title">Data</span>
+      <span><span class="shed-leg-dot" style="background:#6b4fa0"></span>Data partners</span>
+      <span><span class="shed-leg-dot" style="background:#6b4fa0;opacity:.5"></span>Data artefacts</span>
+    </div>
+    <div class="shed-layout">
+      <div id="place-map" class="shed-map"></div>
+      <div class="shed-right">
+        <div id="place-grid" class="shed-grid"></div>
+      </div>
+    </div>
+    <div id="place-content" style="margin-top:18px"></div>
+  </div>
+</section>
+</div>
+
+<script src="india_geo.js"></script>
+<script src="artefacts.js?v=20260324d"></script>
+<script src="partners.js?v=20260324d"></script>
+<script>
+var CAT_COL = {Urban:'#16796e', Rural:'#c4921a', CnR:'#1a7847', Buildings:'#c96a28', Data:'#6b4fa0'};
+
+// Data lens — partners whose work is significantly data, digital, civic-tech, or knowledge-platform oriented
+var DATA_PARTNERS = [
+  'CEEW','CSTEP','Civis','CoRE Stack (CommonsTech Foundation)','Fields of View','Gramvaani',
+  'IIHS','India Development Review','Janaagraha','Oorvani Foundation','PARI','Platform for Commons',
+  'Praja','Tech4Good Community / T4G Labs','Technology for Wildlife Foundation','WELL Labs',
+  'WRI India','Vidhi Centre (Delhi)','Vidhi Centre (Bengaluru)','Biodiversity Collaborative',
+  'India Climate Collaborative','ReapBenefit','Slowform Media','Narrative Hub / The Climate Narrative Hub',
+  'ATREE','M.S.Swaminathan Research','Keystone Foundation','Nature Conservation Foundation',
+  'Centre for Wildlife Studies','Wildlife Conservation Society India','Bridgespan India',
+  'Wetlands International','WASSAN','Shakti Sustainable Energy Foundation','Sustainable Futures Collective',
+  'Arthan Foundation','Bharat Design Labs','Socratus','RangDe','Padraka Foundation',
+  'Dakshin Foundation','Ecological Restoration Alliance','Transform Rural India Foundation'
+];
+var activeCat = 'all';
+var activeQuery = '';
+var activeState = '';
+var activeView = 'atlas';
+var artefactQuery = '';
+var artefactMode = 'all';
+var selectedPartner = null;
+var selectedArtefactOrg = null;
+var statesGeoJSON = null;
+var geoLayer = null;  // Layer 2: highlighted states for selected partner
+var selectedMarker = null;
+
+// Init Leaflet map — restricted to India
+var indiaBounds = L.latLngBounds([5, 67], [38, 98]);
+var map = L.map('map',{
+  zoomControl:true,
+  maxBounds:indiaBounds.pad(0.05),
+  maxBoundsViscosity:1.0,
+  minZoom:4
+}).setView([22, 79.5], 5);
+
+// OpenStreetMap tiles (open source)
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{
+  attribution:'&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>',
+  maxZoom:18
+}).addTo(map);
+
+// Mask everything outside India
+statesGeoJSON = INDIA_GEOJSON;
+(function(){
+  // Build a single polygon with a hole for India — covers the entire world except India
+  var outerRing = [[-90,-180],[-90,180],[90,180],[90,-180],[-90,-180]];
+  var indiaCoords = [];
+  statesGeoJSON.features.forEach(function(f){
+    var geom = f.geometry;
+    var polys = geom.type==='MultiPolygon' ? geom.coordinates : [geom.coordinates];
+    polys.forEach(function(poly){ indiaCoords.push(poly[0]); });
+  });
+  var rings = [outerRing];
+  indiaCoords.forEach(function(ring){
+    rings.push(ring.map(function(c){return[c[1],c[0]];}));
+  });
+  L.polygon(rings,{
+    stroke:false,fillColor:'#ebe2cf',fillOpacity:1,interactive:false
+  }).addTo(map);
+})();
+
+// State boundaries layer — loaded from inlined INDIA_GEOJSON
+var statesLayer = null;
+statesLayer = L.geoJSON(statesGeoJSON,{
+  style:function(){return{color:'rgba(22,121,110,0.35)',weight:1,fillColor:'rgba(22,121,110,0.04)',fillOpacity:1};},
+  onEachFeature:function(f,layer){
+    var name = f.properties.st_nm || '';
+    if(name) layer.bindTooltip(name,{sticky:true,className:'state-tip'});
+  }
+});
+if(document.getElementById('lyr-states').checked) statesLayer.addTo(map);
+
+// Cluster group for HQ markers (Layer 1)
+var markers = L.markerClusterGroup({
+  maxClusterRadius:40,
+  spiderfyOnMaxZoom:true,
+  showCoverageOnHover:false,
+  iconCreateFunction:function(cluster){
+    var count = cluster.getChildCount();
+    var size = count<5?34:count<15?42:50;
+    return L.divIcon({
+      html:'<div style="background:#16796e;color:#fff;border-radius:50%;width:'+size+'px;height:'+size+'px;display:flex;align-items:center;justify-content:center;font-weight:700;font-size:12px;border:2px solid #fff;box-shadow:0 2px 8px rgba(0,0,0,.3)">'+count+'</div>',
+      className:'',iconSize:[size,size]
+    });
+  }
+});
+map.addLayer(markers);
+
+function makeIcon(cat,isSelected,isRM){
+  var col = CAT_COL[cat]||'#16796e';
+  var sz = isSelected?20:14;
+  var bw = isSelected?3:2;
+  var ring = isSelected?'box-shadow:0 0 0 4px '+col+'44,0 2px 8px rgba(0,0,0,.3)':'box-shadow:0 2px 6px rgba(0,0,0,.25)';
+  // Rainmatter = circle, Ecosystem = rounded square
+  var radius = isRM!==false ? '50%' : '3px';
+  return L.divIcon({
+    html:'<div style="background:'+col+';width:'+sz+'px;height:'+sz+'px;border-radius:'+radius+';border:'+bw+'px solid #fff;'+ring+'"></div>',
+    className:'',iconSize:[sz,sz],iconAnchor:[sz/2,sz/2],popupAnchor:[0,-sz/2]
+  });
+}
+
+function popupHtml(p){
+  var col = CAT_COL[p.cat]||'#16796e';
+  var statesText = p.states.join(', ');
+  var netLabel = p.rm ? 'Rainmatter' : 'Ecosystem';
+  var netCol = p.rm ? 'var(--teal)' : 'var(--orange)';
+  return '<strong>'+p.name+'</strong><em>'+p.geo+'</em>'+
+    '<span style="display:inline-block;background:'+col+'22;color:'+col+';padding:1px 7px;border-radius:4px;font-size:.7rem;margin:4px 0">'+p.cat+'</span>'+
+    '<span style="display:inline-block;background:rgba(0,0,0,.06);color:var(--dark);padding:1px 7px;border-radius:4px;font-size:.65rem;margin:4px 0 4px 4px">'+netLabel+'</span>'+
+    '<div class="pdesc">'+p.desc+'</div>'+
+    '<div class="pstates">Works in: '+statesText+'</div>';
+}
+
+function partnerMatchesQuery(p,query){
+  if(!query) return true;
+  var haystack = [
+    p.name,
+    p.geo,
+    p.cat,
+    p.desc,
+    p.states.join(' ')
+  ].join(' ').toLowerCase();
+  return haystack.indexOf(query) > -1;
+}
+
+function getFiltered(){
+  var query = activeQuery.trim().toLowerCase();
+  var showRM = document.getElementById('lyr-rm').checked;
+  var showEco = document.getElementById('lyr-eco').checked;
+  return MAP_PARTNERS.filter(function(p){
+    var categoryOk = activeCat==='all' || p.cat===activeCat || (activeCat==='Data' && DATA_PARTNERS.indexOf(p.name)>-1);
+    var stateOk = !activeState || p.states.indexOf(activeState)>-1 || (activeState==='Pan India' && p.states.indexOf('Pan India')>-1);
+    var networkOk = (p.rm && showRM) || (!p.rm && showEco);
+    return categoryOk && stateOk && networkOk && partnerMatchesQuery(p,query);
+  }).sort(function(a,b){
+    return a.name.localeCompare(b.name);
+  });
+}
+
+function escapeHtml(text){
+  return String(text||'')
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+function cloneArtefactItems(items){
+  return (items||[]).map(function(item){
+    return {
+      name: item.name,
+      kind: item.kind,
+      desc: item.desc
+    };
+  });
+}
+
+function cloneSourceItems(items){
+  return (items||[]).map(function(item){
+    return {
+      label: item.label,
+      url: item.url
+    };
+  });
+}
+
+function getArtefactOverride(name){
+  var canonical = ORG_ARTEFACT_ALIASES[name] || name;
+  return {
+    canonical: canonical,
+    data: ORG_ARTEFACT_OVERRIDES[canonical] || null
+  };
+}
+
+function buildArtefactRecord(partner){
+  var overrideMeta = getArtefactOverride(partner.name);
+  var override = overrideMeta.data;
+  if(override){
+    return {
+      name: partner.name,
+      canonicalName: overrideMeta.canonical,
+      status: override.status || 'researched',
+      summary: override.summary,
+      tangible: cloneArtefactItems(override.tangible),
+      intangible: cloneArtefactItems(override.intangible),
+      sources: cloneSourceItems(override.sources),
+      atlas: {
+        geo: partner.geo,
+        cat: partner.cat,
+        desc: partner.desc,
+        states: partner.states.slice()
+      }
+    };
+  }
+  return {
+    name: partner.name,
+    canonicalName: partner.name,
+    status: 'pending',
+    summary: 'The atlas captures this organisation\'s footprint and mission lens, but a source-by-source artefact scan has not yet been compiled into the research tab.',
+    tangible: [
+      {
+        name: 'HQ and work geography baseline',
+        kind: 'Atlas baseline',
+        desc: 'Current dashboard evidence places the organisation in '+partner.geo+' and tracks its active states as '+partner.states.join(', ')+'.'
+      }
+    ],
+    intangible: [
+      {
+        name: 'Mission lens',
+        kind: 'Baseline description',
+        desc: partner.desc
+      }
+    ],
+    sources: [],
+    atlas: {
+      geo: partner.geo,
+      cat: partner.cat,
+      desc: partner.desc,
+      states: partner.states.slice()
+    }
+  };
+}
+
+var ARTEFACT_RECORDS = MAP_PARTNERS.map(buildArtefactRecord).sort(function(a,b){
+  if(a.status!==b.status) return a.status==='researched' ? -1 : 1;
+  return a.name.localeCompare(b.name);
+});
+
+function getArtefactCounts(record){
+  return {
+    tangible: record.tangible.length,
+    intangible: record.intangible.length,
+    total: record.tangible.length + record.intangible.length
+  };
+}
+
+function artefactStatusLabel(status){
+  return status==='researched' ? 'Deep research' : 'Atlas baseline';
+}
+
+function artefactMatchesQuery(record,query){
+  if(!query) return true;
+  var text = [
+    record.name,
+    record.canonicalName,
+    record.summary,
+    record.atlas.geo,
+    record.atlas.cat,
+    record.atlas.desc,
+    record.atlas.states.join(' '),
+    record.tangible.map(function(item){ return item.name+' '+item.kind+' '+item.desc; }).join(' '),
+    record.intangible.map(function(item){ return item.name+' '+item.kind+' '+item.desc; }).join(' '),
+    record.sources.map(function(item){ return item.label+' '+item.url; }).join(' ')
+  ].join(' ').toLowerCase();
+  return text.indexOf(query) > -1;
+}
+
+function getFilteredArtefactRecords(){
+  var query = artefactQuery.trim().toLowerCase();
+  return ARTEFACT_RECORDS.filter(function(record){
+    var modeOk = artefactMode==='all' || record.status==='researched';
+    return modeOk && artefactMatchesQuery(record,query);
+  });
+}
+
+function updateArtefactStats(){
+  var researched = ARTEFACT_RECORDS.filter(function(record){ return record.status==='researched'; });
+  var artefactCount = researched.reduce(function(total,record){
+    return total + getArtefactCounts(record).total;
+  },0);
+  document.getElementById('a-orgs').textContent = ARTEFACT_RECORDS.length;
+  document.getElementById('a-researched').textContent = researched.length;
+  document.getElementById('a-items').textContent = artefactCount;
+}
+
+function renderArtefactCards(items){
+  if(!items.length){
+    return '<div class="artefact-empty">No named artefacts logged in this section yet.</div>';
+  }
+  return items.map(function(item){
+    var nameHtml = item.url
+      ? '<a href="'+escapeHtml(item.url)+'" target="_blank" rel="noreferrer" class="artefact-link">'+escapeHtml(item.name)+'</a>'
+      : escapeHtml(item.name);
+    return '<div class="artefact-card">'
+      +'<strong>'+nameHtml+'</strong>'
+      +'<em>'+escapeHtml(item.kind)+'</em>'
+      +'<p>'+escapeHtml(item.desc)+'</p>'
+      +'</div>';
+  }).join('');
+}
+
+function renderArtefactDetail(record){
+  var container = document.getElementById('artefacts-detail');
+  if(!record){
+    container.innerHTML = '<div class="artefact-empty">No organisations match the current artefact search. Clear the search or switch back to all organisations.</div>';
+    return;
+  }
+  var counts = getArtefactCounts(record);
+  var statusClass = record.status==='researched' ? 'live' : 'pending';
+  var aliasNote = record.canonicalName!==record.name
+    ? '<div class="artefact-empty">This centre currently reuses the shared public artefact scan logged for '+escapeHtml(record.canonicalName)+'.</div>'
+    : '';
+  var pendingNote = record.status==='researched'
+    ? ''
+    : '<div class="artefact-empty">This is still a baseline record. It reflects the atlas footprint and mission lens, but not yet a completed source trail of named products, tools, programmes, or public resources.</div>';
+  var sourcesHtml = record.sources.length
+    ? '<ul>'+record.sources.map(function(source){
+        return '<li><a href="'+escapeHtml(source.url)+'" target="_blank" rel="noreferrer">'+escapeHtml(source.label)+'</a></li>';
+      }).join('')+'</ul>'
+    : '<div class="artefact-empty">No official source trail has been attached yet for this organisation.</div>';
+
+  container.innerHTML = ''
+    +'<div class="artefacts-detail-head">'
+      +'<div>'
+        +'<h3>'+escapeHtml(record.name)+'</h3>'
+        +'<p>'+escapeHtml(record.summary)+'</p>'
+      +'</div>'
+      +'<span class="artefacts-status '+statusClass+'">'+artefactStatusLabel(record.status)+'</span>'
+    +'</div>'
+    +'<div class="action-row" style="margin-top:14px">'
+      +'<button class="secondary-btn" type="button" data-open-atlas="'+escapeHtml(record.name)+'">View on atlas</button>'
+    +'</div>'
+    +'<div class="focus-meta" style="margin-top:14px">HQ: '+escapeHtml(record.atlas.geo)+' | Lens: '+escapeHtml(record.atlas.cat)+' | Works in: '+escapeHtml(record.atlas.states.join(', '))+'</div>'
+    +aliasNote
+    +pendingNote
+    +'<div class="artefacts-grid">'
+      +'<div class="artefacts-section">'
+        +'<h4>Tangible artefacts <span style="font-weight:400;color:var(--muted)">('+counts.tangible+')</span></h4>'
+        +renderArtefactCards(record.tangible)
+      +'</div>'
+      +'<div class="artefacts-section">'
+        +'<h4>Intangible artefacts <span style="font-weight:400;color:var(--muted)">('+counts.intangible+')</span></h4>'
+        +renderArtefactCards(record.intangible)
+      +'</div>'
+    +'</div>'
+    +'<div class="artefact-sources">'
+      +'<h4>Source trail</h4>'
+      +sourcesHtml
+    +'</div>';
+}
+
+function updateArtefactFilterButtons(){
+  document.getElementById('artefact-filter-all').classList.toggle('on',artefactMode==='all');
+  document.getElementById('artefact-filter-researched').classList.toggle('on',artefactMode==='researched');
+}
+
+function renderArtefactPane(){
+  updateArtefactStats();
+  updateArtefactFilterButtons();
+  var records = getFilteredArtefactRecords();
+  var list = document.getElementById('artefacts-list');
+  document.getElementById('artefact-count').textContent = '('+records.length+')';
+
+  if(records.length && !records.some(function(record){ return record.name===selectedArtefactOrg; })){
+    selectedArtefactOrg = records[0].name;
+  }
+  if(!records.length){
+    selectedArtefactOrg = null;
+    list.innerHTML = '<div class="sb-empty">No organisations match the current artefact search. Clear the search or switch to the full ledger.</div>';
+    renderArtefactDetail(null);
+    return;
+  }
+
+  list.innerHTML = records.map(function(record){
+    var counts = getArtefactCounts(record);
+    var statusClass = record.status==='researched' ? 'live' : 'pending';
+    return '<div class="artefact-item'+(record.name===selectedArtefactOrg?' on':'')+'" data-name="'+escapeHtml(record.name)+'">'
+      +'<div class="artefact-org">'+escapeHtml(record.name)+'</div>'
+      +'<div class="sb-geo">'+escapeHtml(record.atlas.geo)+'</div>'
+      +'<div class="artefact-meta">'
+        +'<span class="artefact-pill '+statusClass+'">'+artefactStatusLabel(record.status)+'</span>'
+        +'<span class="artefact-count">'+counts.total+' logged</span>'
+      +'</div>'
+      +'</div>';
+  }).join('');
+
+  var activeRecord = records.find(function(record){ return record.name===selectedArtefactOrg; }) || records[0];
+  if(activeRecord && activeRecord.name!==selectedArtefactOrg) selectedArtefactOrg = activeRecord.name;
+  renderArtefactDetail(activeRecord);
+}
+
+function selectArtefactOrg(name,opts){
+  selectedArtefactOrg = name;
+  renderArtefactPane();
+  if(opts && opts.switchView) switchView('artefacts');
+}
+
+function switchView(view){
+  activeView = view;
+  document.querySelectorAll('.view-tab').forEach(function(tab){
+    var on = tab.dataset.view===view;
+    tab.classList.toggle('on',on);
+    tab.setAttribute('aria-selected',on?'true':'false');
+  });
+  document.getElementById('pane-atlas').classList.toggle('on',view==='atlas');
+  document.getElementById('pane-artefacts').classList.toggle('on',view==='artefacts');
+  document.getElementById('pane-place').classList.toggle('on',view==='place');
+  if(view==='artefacts'){
+    if(!selectedArtefactOrg && selectedPartner) selectedArtefactOrg = selectedPartner.name;
+    renderArtefactPane();
+  } else if(view==='place'){
+    setTimeout(function(){ initPlaceMap(); if(placeMap) placeMap.invalidateSize(); },160);
+    renderPlacePane();
+  } else {
+    setTimeout(function(){
+      map.invalidateSize();
+      if(selectedPartner) focusMapOnPartner(selectedPartner);
+      else resetMapView();
+    },160);
+  }
+}
+
+// State name normalization for matching GeoJSON
+// Modern GeoJSON uses current names (Telangana, Odisha, Uttarakhand) — most partner names match directly
+var STATE_ALIAS = {
+  'pan india':null,
+  'nct of delhi':'Delhi',
+  'delhi ncr':'Delhi',
+  'northeast india':null
+};
+
+function getStatsStateName(s){
+  var lower = s.toLowerCase().trim();
+  if(lower==='pan india') return null;
+  if(lower==='nct of delhi') return 'Delhi';
+  return s.trim();
+}
+
+function updateHeaderStats(partners){
+  var cities = {};
+  var workStates = {};
+  partners.forEach(function(p){
+    var city = (p.geo||'').split(',')[0].trim();
+    if(city && city.toLowerCase()!=='pan india') cities[city] = true;
+    p.states.forEach(function(state){
+      var label = getStatsStateName(state);
+      if(label) workStates[label] = true;
+    });
+  });
+  document.getElementById('s-total').textContent = partners.length;
+  document.getElementById('s-cities').textContent = Object.keys(cities).length;
+  document.getElementById('s-states').textContent = Object.keys(workStates).length;
+}
+
+function updateFocusMeta(partners){
+  var bits = [];
+  if(selectedPartner){
+    bits.push('Focused on '+selectedPartner.name+'.');
+  } else {
+    bits.push('Showing '+partners.length+' partner'+(partners.length===1?'':'s')+'.');
+  }
+  if(activeCat!=='all') bits.push('Filter: '+(activeCat==='CnR'?'Conservation':activeCat)+'.');
+  if(activeQuery.trim()) bits.push('Search: "'+activeQuery.trim()+'".');
+  document.getElementById('focus-meta').textContent = bits.join(' ');
+}
+
+function setSidebarOpen(isOpen){
+  document.getElementById('sidebar').classList.toggle('open',!!isOpen);
+  setTimeout(function(){ map.invalidateSize(); }, 260);
+}
+
+function resetMapView(){
+  var bounds = markers.getBounds();
+  if(bounds && bounds.isValid()) map.fitBounds(bounds.pad(0.18), {maxZoom:5, animate:true});
+  else map.setView([22,79.5],5,{animate:true});
+}
+
+function normalizeState(s){
+  var lower = s.toLowerCase().trim();
+  if(lower in STATE_ALIAS) return STATE_ALIAS[lower];
+  return s.trim();
+}
+
+function highlightStates(partner){
+  // Remove old highlight
+  if(geoLayer){map.removeLayer(geoLayer);geoLayer=null;}
+  if(!statesGeoJSON||!partner) return;
+  var showGeo = document.getElementById('lyr-geo').checked;
+
+  var isPanIndia = partner.states.some(function(s){return s==='Pan India';});
+
+  if(isPanIndia){
+    // Highlight all states
+    geoLayer = L.geoJSON(statesGeoJSON,{
+      style:function(){return{color:CAT_COL[partner.cat]||'#16796e',weight:2.5,fillColor:CAT_COL[partner.cat]||'#16796e',fillOpacity:0.15,dashArray:''};}
+    });
+    if(showGeo) geoLayer.addTo(map);
+  } else {
+    var normalized = partner.states.map(normalizeState).filter(Boolean);
+    var matchedFeatures = {type:'FeatureCollection',features:[]};
+
+    statesGeoJSON.features.forEach(function(f){
+      var name = (f.properties.st_nm||'').trim();
+      for(var i=0;i<normalized.length;i++){
+        if(name===normalized[i]||name.toLowerCase()===normalized[i].toLowerCase()){
+          matchedFeatures.features.push(f);
+          break;
+        }
+      }
+    });
+
+    if(matchedFeatures.features.length){
+      var col = CAT_COL[partner.cat]||'#16796e';
+      geoLayer = L.geoJSON(matchedFeatures,{
+        style:function(){return{color:col,weight:2.5,fillColor:col,fillOpacity:0.18,dashArray:''};}
+      });
+      if(showGeo) geoLayer.addTo(map);
+    }
+  }
+}
+
+function showInfoPanel(p){
+  var col = CAT_COL[p.cat]||'#16796e';
+  document.getElementById('ip-name').textContent = p.name;
+  document.getElementById('ip-geo').textContent = 'HQ: '+p.geo;
+  var catEl = document.getElementById('ip-cat');
+  catEl.textContent = p.cat;
+  catEl.style.background = col+'18';
+  catEl.style.color = col;
+  document.getElementById('ip-net').textContent = p.rm ? 'Rainmatter' : 'Ecosystem';
+  document.getElementById('ip-desc').textContent = p.desc;
+  document.getElementById('ip-states').textContent = p.states.join(', ');
+  document.getElementById('info-panel').classList.add('show');
+}
+
+function focusMapOnPartner(p){
+  if(geoLayer && document.getElementById('lyr-geo').checked && geoLayer.getBounds && geoLayer.getBounds().isValid()){
+    map.fitBounds(geoLayer.getBounds().pad(0.28), {maxZoom:6, animate:true});
+  } else {
+    map.flyTo([p.lat,p.lon], 6, {animate:true, duration:.6});
+  }
+}
+
+function removeSelectedMarker(){
+  if(selectedMarker){
+    map.removeLayer(selectedMarker);
+    selectedMarker = null;
+  }
+}
+
+function showSelectedMarker(p){
+  removeSelectedMarker();
+  if(!document.getElementById('lyr-hq').checked) return;
+  selectedMarker = L.marker([p.lat,p.lon],{icon:makeIcon(p.cat,true,p.rm)});
+  selectedMarker.bindPopup(popupHtml(p),{maxWidth:260});
+  selectedMarker.addTo(map).openPopup();
+}
+
+function selectPartner(p){
+  selectedPartner = p;
+  selectedArtefactOrg = p.name;
+  if(map.hasLayer(markers)) map.removeLayer(markers);
+  showSelectedMarker(p);
+  highlightStates(p);
+  showInfoPanel(p);
+  focusMapOnPartner(p);
+  document.querySelectorAll('.sb-item').forEach(function(el){
+    el.classList.toggle('active',el.dataset.name===p.name);
+    el.classList.toggle('dimmed',el.dataset.name!==p.name);
+  });
+  updateFocusMeta(getFiltered());
+  setSidebarOpen(false);
+  if(activeView==='artefacts') renderArtefactPane();
+}
+
+function clearSelection(){
+  selectedPartner = null;
+  removeSelectedMarker();
+  if(document.getElementById('lyr-hq').checked && !map.hasLayer(markers)) map.addLayer(markers);
+  if(geoLayer){map.removeLayer(geoLayer);geoLayer=null;}
+  document.getElementById('info-panel').classList.remove('show');
+  document.querySelectorAll('.sb-item').forEach(function(el){
+    el.classList.remove('active');
+    el.classList.remove('dimmed');
+  });
+  updateFocusMeta(getFiltered());
+}
+
+function renderMarkers(){
+  markers.clearLayers();
+  clearSelection();
+  var pts = getFiltered();
+
+  pts.forEach(function(p){
+    var m = L.marker([p.lat,p.lon],{icon:makeIcon(p.cat,false,p.rm)});
+    m.on('click',function(){
+      selectPartner(p);
+    });
+    markers.addLayer(m);
+  });
+
+  // Sidebar
+  var list = document.getElementById('sb-list');
+  document.getElementById('sb-count').textContent = '('+pts.length+')';
+  updateHeaderStats(pts);
+  updateFocusMeta(pts);
+  if(!pts.length){
+    list.innerHTML = '<div class="sb-empty">No partners match the current search and filter combination. Clear the search or switch the portfolio lens to widen the map.</div>';
+    return;
+  }
+  list.innerHTML = pts.map(function(p){
+    var col = CAT_COL[p.cat]||'#16796e';
+    var netLabel = p.rm ? 'Rainmatter' : 'Ecosystem';
+    var netDot = p.rm
+      ? '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--teal);margin-right:3px;vertical-align:middle"></span>'
+      : '<span style="display:inline-block;width:6px;height:6px;border-radius:2px;background:var(--orange);margin-right:3px;vertical-align:middle"></span>';
+    return '<div class="sb-item" data-name="'+p.name.replace(/"/g,'&quot;')+'">'
+      +'<div class="sb-name">'+p.name+'</div>'
+      +'<div class="sb-geo">'+p.geo+'</div>'
+      +'<span class="sb-cat" style="background:'+col+'18;color:'+col+'">'+p.cat+'</span>'
+      +'<span class="sb-cat" style="background:rgba(0,0,0,.05);color:var(--muted);font-size:.65rem">'+netDot+netLabel+'</span>'
+      +'<div class="sb-states">'+p.states.join(', ')+'</div></div>';
+  }).join('');
+}
+
+// Sidebar click
+document.getElementById('sb-list').addEventListener('click',function(e){
+  var item = e.target.closest('.sb-item');
+  if(!item) return;
+  var name = item.dataset.name;
+  var p = MAP_PARTNERS.find(function(x){return x.name===name;});
+  if(!p) return;
+  selectPartner(p);
+});
+
+document.getElementById('artefacts-list').addEventListener('click',function(e){
+  var item = e.target.closest('.artefact-item');
+  if(!item) return;
+  selectArtefactOrg(item.dataset.name);
+});
+
+document.getElementById('artefacts-detail').addEventListener('click',function(e){
+  var button = e.target.closest('[data-open-atlas]');
+  if(!button) return;
+  var name = button.getAttribute('data-open-atlas');
+  var p = MAP_PARTNERS.find(function(item){ return item.name===name; });
+  if(!p) return;
+  switchView('atlas');
+  selectPartner(p);
+});
+
+// Close info panel
+document.getElementById('info-close').addEventListener('click',clearSelection);
+
+document.getElementById('ip-open-artefacts').addEventListener('click',function(){
+  if(selectedPartner){
+    selectArtefactOrg(selectedPartner.name,{switchView:true});
+  } else {
+    switchView('artefacts');
+  }
+});
+
+// Click on map background clears selection
+map.on('click',function(e){
+  // Only clear if not clicking a marker
+  if(!e.originalEvent._stopped){
+    clearSelection();
+  }
+});
+
+// Populate state dropdown
+(function(){
+  var stateSet = {};
+  MAP_PARTNERS.forEach(function(p){
+    p.states.forEach(function(s){ stateSet[s]=true; });
+  });
+  var states = Object.keys(stateSet).sort(function(a,b){
+    if(a==='Pan India') return 1;
+    if(b==='Pan India') return -1;
+    return a.localeCompare(b);
+  });
+  var sel = document.getElementById('state-filter');
+  states.forEach(function(s){
+    var opt = document.createElement('option');
+    opt.value = s;
+    opt.textContent = s;
+    sel.appendChild(opt);
+  });
+})();
+
+function renderFilterChips(){
+  var container = document.getElementById('active-filters');
+  var chips = [];
+  if(activeQuery.trim()){
+    chips.push('<span class="filter-chip">Search: "'+escapeHtml(activeQuery.trim())+'" <button data-clear="search">&times;</button></span>');
+  }
+  if(activeState){
+    chips.push('<span class="filter-chip">State: '+escapeHtml(activeState)+' <button data-clear="state">&times;</button></span>');
+  }
+  if(activeCat!=='all'){
+    var label = activeCat==='CnR'?'Conservation':activeCat;
+    chips.push('<span class="filter-chip">Lens: '+escapeHtml(label)+' <button data-clear="cat">&times;</button></span>');
+  }
+  if(chips.length){
+    container.innerHTML = chips.join('');
+    container.style.display = 'flex';
+  } else {
+    container.innerHTML = '';
+    container.style.display = 'none';
+  }
+}
+
+document.getElementById('active-filters').addEventListener('click',function(e){
+  var btn = e.target.closest('[data-clear]');
+  if(!btn) return;
+  var what = btn.dataset.clear;
+  if(what==='search'){ activeQuery=''; document.getElementById('search').value=''; }
+  if(what==='state'){ activeState=''; document.getElementById('state-filter').value=''; }
+  if(what==='cat'){
+    activeCat='all';
+    document.querySelectorAll('.pill').forEach(function(b){b.classList.toggle('on',b.dataset.cat==='all');});
+  }
+  renderMarkers();
+  renderFilterChips();
+});
+
+// Filter pills
+document.querySelectorAll('.pill').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    document.querySelectorAll('.pill').forEach(function(b){b.classList.remove('on');});
+    this.classList.add('on');
+    activeCat = this.dataset.cat;
+    renderMarkers();
+    renderFilterChips();
+  });
+});
+
+document.getElementById('search').addEventListener('input',function(){
+  activeQuery = this.value;
+  renderMarkers();
+  renderFilterChips();
+});
+
+document.getElementById('state-filter').addEventListener('change',function(){
+  activeState = this.value;
+  renderMarkers();
+  renderFilterChips();
+});
+
+document.getElementById('clear-all-filters').addEventListener('click',function(){
+  activeQuery = '';
+  activeState = '';
+  activeCat = 'all';
+  document.getElementById('search').value = '';
+  document.getElementById('state-filter').value = '';
+  document.querySelectorAll('.pill').forEach(function(b){b.classList.toggle('on',b.dataset.cat==='all');});
+  clearSelection();
+  renderMarkers();
+  renderFilterChips();
+  resetMapView();
+});
+
+document.querySelectorAll('.view-tab').forEach(function(btn){
+  btn.addEventListener('click',function(){
+    switchView(this.dataset.view);
+  });
+});
+
+document.getElementById('artefact-search').addEventListener('input',function(){
+  artefactQuery = this.value;
+  renderArtefactPane();
+});
+
+document.getElementById('artefact-search-clear').addEventListener('click',function(){
+  artefactQuery = '';
+  document.getElementById('artefact-search').value = '';
+  renderArtefactPane();
+});
+
+document.getElementById('artefact-filter-all').addEventListener('click',function(){
+  artefactMode = 'all';
+  renderArtefactPane();
+});
+
+document.getElementById('artefact-filter-researched').addEventListener('click',function(){
+  artefactMode = 'researched';
+  renderArtefactPane();
+});
+
+document.getElementById('clear-focus').addEventListener('click',function(){
+  clearSelection();
+  resetMapView();
+});
+
+document.getElementById('sidebar-toggle').addEventListener('click',function(){
+  setSidebarOpen(true);
+});
+
+document.getElementById('sidebar-close').addEventListener('click',function(){
+  setSidebarOpen(false);
+});
+
+// Layer toggles
+document.getElementById('lyr-hq').addEventListener('change',function(){
+  if(this.checked){
+    if(selectedPartner) showSelectedMarker(selectedPartner);
+    else if(!map.hasLayer(markers)) map.addLayer(markers);
+  } else {
+    if(map.hasLayer(markers)) map.removeLayer(markers);
+    removeSelectedMarker();
+  }
+});
+document.getElementById('lyr-states').addEventListener('change',function(){
+  if(!statesLayer) return;
+  if(this.checked) map.addLayer(statesLayer);
+  else map.removeLayer(statesLayer);
+});
+document.getElementById('lyr-geo').addEventListener('change',function(){
+  if(!geoLayer) return;
+  if(this.checked) map.addLayer(geoLayer);
+  else map.removeLayer(geoLayer);
+});
+document.getElementById('lyr-rm').addEventListener('change',function(){ renderMarkers(); });
+document.getElementById('lyr-eco').addEventListener('change',function(){ renderMarkers(); });
+
+// Move layer toggle into the map container after map init and prevent Leaflet from swallowing events
+setTimeout(function(){
+  var mapDiv = document.getElementById('map');
+  var lt = document.getElementById('layer-toggle');
+  var ip = document.getElementById('info-panel');
+  mapDiv.appendChild(lt);
+  mapDiv.appendChild(ip);
+  L.DomEvent.disableClickPropagation(lt);
+  L.DomEvent.disableScrollPropagation(lt);
+  L.DomEvent.disableClickPropagation(ip);
+  L.DomEvent.disableScrollPropagation(ip);
+},0);
+
+// ── PLACE TAB ──
+
+var THEMES = [
+  {key:'water', label:'Water, watersheds & wetlands', terms:['water','watershed','wetland','river','lake','rain','aquifer','irrigation','groundwater','well','tank']},
+  {key:'biodiversity', label:'Biodiversity & conservation', terms:['biodiversity','conservation','wildlife','species','habitat','forest','ecology','restoration','sanctuary','hornbill','elephant','corridor']},
+  {key:'farming', label:'Farming, food & livelihoods', terms:['farm','agriculture','crop','soil','organic','millet','livelihood','dairy','agroforestry','food','producer','seed','livestock']},
+  {key:'climate', label:'Climate & energy', terms:['climate','energy','solar','emission','carbon','renewable','cooling','electric','transition','resilience']},
+  {key:'governance', label:'Governance, civic & legal', terms:['governance','civic','municipal','policy','law','legal','citizen','democracy','transparency','accountability','finance']},
+  {key:'education', label:'Education & awareness', terms:['education','school','learning','training','fellowship','curriculum','youth','children','awareness']},
+  {key:'waste', label:'Waste & circular economy', terms:['waste','segregation','circular','compost','recycl','sanitation','plastic']},
+  {key:'urban', label:'Urban planning & housing', terms:['urban','city','cities','housing','slum','neighbourhood','spatial','planning','transport','mobility']},
+  {key:'technology', label:'Technology & data', terms:['technology','digital','data','platform','app','dashboard','open-source','software','tech']},
+  {key:'health', label:'Health & wellbeing', terms:['health','hygiene','wellbeing','nutrition','sanitation','immunis']}
+];
+
+// SHEDS — landscapes, bioregions, corridors. Not administrative boundaries.
+var SHEDS = [
+  {
+    key:'western-ghats', label:'Western Ghats',
+    states:['Karnataka','Kerala','Tamil Nadu','Goa','Maharashtra'],
+    context:'One of the world\'s eight biodiversity hotspots. A 1,600 km mountain chain running parallel to the western coast — origin of nearly every peninsular river. Plantation pressure, fragmentation, endemic species loss, tribal displacement.',
+    health:[
+      {metric:'Forest cover',status:'declining',fact:'Lost 5% dense forest in 2 decades. Fragmentation accelerating in northern Ghats.'},
+      {metric:'Rainfall pattern',status:'critical',fact:'Extreme rainfall events up 50% since 2000. Dry spells lengthening between monsoon bursts.'},
+      {metric:'Endemic species',status:'declining',fact:'35% of Western Ghats amphibians are threatened. Several stream-dependent species not seen in years.'},
+      {metric:'River health',status:'declining',fact:'Major west-flowing rivers show rising sediment loads and reduced lean-season flows.'},
+      {metric:'Tribal tenure',status:'critical',fact:'Less than 3% of potential FRA claims in Maharashtra Ghats districts have been settled.'}
+    ],
+    needs:['Corridor connectivity between fragmented forests','Tribal land rights and forest governance','Watershed restoration at landscape scale','Alternatives to plantation monocultures','Endemic species monitoring and community science'],
+    fills:['A landscape-scale corridor mapping and restoration body like Wildlife Institute of India or WCS but focused on private and revenue lands between protected areas','A legal aid and paralegal network specialising in FRA implementation — like CLPR but rooted in adivasi hamlets','A Ghats-wide watershed authority modelled on river basin organisations — not state-bound, not project-bound','Agroforestry enterprises that make native species more profitable than coffee/rubber/areca — economics, not awareness','A citizen science platform like eBird but for Western Ghats endemics, feeding real-time data into state biodiversity boards'],
+    risks:['Most conservation orgs cluster in Nilgiris-Coorg — northern Ghats (Goa, Sindhudurg, Kolhapur) are structurally neglected','Plantation-to-forest transition has no viable economic model — farmers have no reason to switch','Mining lobby in Goa and Karnataka operates faster than conservation policy can respond','Climate-induced rainfall shift is already altering hydrology but no partner tracks it systematically','Tribal communities are research subjects, rarely governance partners'],
+    counters:['Seed at least 2 partners in the northern Ghats — Goa-Sindhudurg corridor needs its own anchor org','Build a financial instrument (PES, carbon, or biodiversity credits) that pays farmers more for native forest than plantation — until the math works, awareness fails','A dedicated mining accountability watchdog with legal capacity — FIMI-style industry tracking for civil society','Commission a 10-year hydrology monitoring programme across the Ghats — partner with IMD and IISC, not just NGOs','Shift from research-on to governance-with — fund tribal-led organisations, not tribal-focused research'],
+    rings:[
+      {key:'land', label:'The watershed', sub:'Rivers born here feed half the peninsula', question:'Are the headwaters intact? Are corridors connected? Is the canopy closing or opening?'},
+      {key:'people', label:'Forest communities', sub:'Adivasi, agrarian, plantation labour', question:'Who tends this landscape? What are their livelihoods? Do they have tenure?'},
+      {key:'commons', label:'Governance & rights', sub:'Forest rights, biodiversity boards, gram sabhas', question:'Is PESA implemented? Are FRAs exercised? Do communities govern their commons?'},
+      {key:'tools', label:'Knowledge & practice', sub:'Restoration science, monitoring, market access', question:'What restoration protocols exist? Is there monitoring infrastructure? Can forest produce reach fair markets?'}
+    ]
+  },
+  {
+    key:'eastern-himalayas', label:'Eastern Himalayas & Northeast',
+    states:['Arunachal Pradesh','Assam','Meghalaya','Sikkim','Nagaland','Manipur','Mizoram','Tripura'],
+    context:'The other major biodiversity hotspot. Earthquake-prone, flood-vulnerable, culturally diverse with 200+ ethnic communities. Elephant corridors under pressure, shifting cultivation transitioning, dam conflicts, border ecologies.',
+    health:[
+      {metric:'Elephant corridors',status:'critical',fact:'14 of 28 elephant corridors in northeast India are severely degraded or blocked.'},
+      {metric:'Flood frequency',status:'critical',fact:'Assam floods now annual. Brahmaputra erosion displaces 100,000+ people each year.'},
+      {metric:'Forest cover',status:'stable',fact:'Highest forest cover in India but community forests under pressure from infrastructure projects.'},
+      {metric:'Indigenous languages',status:'declining',fact:'Over 100 languages spoken. UNESCO lists many as endangered. Knowledge dies with language.'},
+      {metric:'Youth retention',status:'critical',fact:'60%+ youth in Meghalaya and Nagaland want to leave. Outmigration hollowing villages.'}
+    ],
+    needs:['Elephant and wildlife corridor restoration','Indigenous knowledge documentation before it erodes','Flood resilience and riverbank management','Youth enterprise to stem outmigration','Community forest governance beyond state control'],
+    fills:['A corridor restoration programme with revenue-land focus — corridor gaps are on private and community land, not inside reserves','An indigenous knowledge archive run by indigenous researchers — not external anthropologists, internal documentarians with equipment and training','A riverbank bioengineering practice combining traditional bamboo techniques with modern geotextiles — partner with IIT Guwahati','A northeast-native enterprise accelerator — not Bengaluru models parachuted in, but local craft, food, and tourism ventures','Strengthen autonomous district councils as forest governance bodies — legal capacity building for Sixth Schedule institutions'],
+    risks:['Almost zero Rainmatter partner presence in Manipur, Mizoram, Tripura, Nagaland — 4 entire states are invisible','Dam-building on the Brahmaputra system is a geopolitical-ecological crisis no partner is equipped to address','Indigenous knowledge is eroding faster than anyone is documenting — one generation away from loss','The region is treated as a conservation frontier, not as a place where people live and govern','Flood-erosion cycle is worsening but there is no long-term hydrological monitoring partner'],
+    counters:['Fund a scouting mission — identify 3-5 community orgs in Manipur/Mizoram/Nagaland and bring them into the ecosystem','Build a cross-border river monitoring coalition with Bangladeshi and Bhutanese civil society — this cannot be solved within Indian borders','Fund 50 community video documentation kits and 2-year stipends for young indigenous documentarians','Reframe the portfolio — from conservation-in-the-northeast to governance-by-the-northeast','Commission a 20-year Brahmaputra basin hydrological dataset — partner with NESAC (North Eastern Space Applications Centre)'],
+    rings:[
+      {key:'land', label:'The corridor', sub:'Himalayan foothills to Brahmaputra floodplain', question:'Are elephant corridors intact? Is shifting cultivation sustaining or degrading? What is the flood cycle?'},
+      {key:'people', label:'Indigenous communities', sub:'Diverse ethnic groups, customary governance', question:'Are traditional livelihoods viable? Is outmigration hollowing villages? What do young people want?'},
+      {key:'commons', label:'Customary governance', sub:'Community forests, village councils, sacred groves', question:'Do autonomous councils function? Are sacred groves protected? Is customary law respected?'},
+      {key:'tools', label:'Infrastructure & knowledge', sub:'Roads, connectivity, documentation', question:'What digital infrastructure exists? Is indigenous knowledge being documented? Are there local media?'}
+    ]
+  },
+  {
+    key:'deccan', label:'Deccan Plateau & Dryland India',
+    states:['Telangana','Andhra Pradesh','Karnataka','Maharashtra'],
+    context:'The rain-shadow interior — dryland, drought-prone, rainfed. Tank irrigation systems collapsing. Farmer distress concentrated here. Marathwada, Vidarbha, Rayalaseema, Anantapur — the hard geography of agrarian India.',
+    health:[
+      {metric:'Groundwater',status:'critical',fact:'Over 60% of wells in Marathwada and Rayalaseema have dropped below recharge levels.'},
+      {metric:'Farmer income',status:'critical',fact:'Average farm income in dryland districts is below minimum wage. Debt-to-income ratios are unsustainable.'},
+      {metric:'Tank systems',status:'declining',fact:'80%+ of traditional tanks in Telangana are silted, encroached, or non-functional.'},
+      {metric:'Soil health',status:'declining',fact:'Organic carbon levels in Deccan soils have halved in 30 years. Micronutrient deficiency is widespread.'},
+      {metric:'Millet acreage',status:'improving',fact:'Millet area recovering after decades of decline. But processing and market infrastructure still absent.'}
+    ],
+    needs:['Tank and watershed revival at massive scale','Millet and dryland crop ecosystems — not just production but markets','Farmer distress prevention — not response','Groundwater governance before aquifers collapse','Land restoration on degraded commons'],
+    fills:['A tank federation model — panchayat-owned, state-supported, technically backstopped by an org like WASSAN but at 10x current scale','A millet market-making entity — procurement, branding, urban retail, institutional buyers (mid-day meals, PDS) — supply without demand is a warehouse','A farmer distress early-warning system linking crop insurance data, credit exposure, and rainfall anomalies — intervention before crisis','Community groundwater monitoring and rationing — Andhra\'s APWELL model scaled with digital tools and real enforcement','Commons restoration with legal protection — restore and then gazette as community forest or grazing land, not just plant and leave'],
+    risks:['Farmer suicide is a systemic outcome — no partner works on the credit-debt-market trap as a system','Groundwater extraction is unregulated and unmeasured — the collapse will be sudden, not gradual','Millet revival is supply-side — demand-side market infrastructure barely exists','Tank restoration is project-based, not institutionalised — who maintains them after the NGO leaves?','Caste determines water access, land ownership, and market power but no partner names this explicitly'],
+    counters:['Map the credit-debt cycle — who lends, at what rate, what collateral — and build an alternative rural credit architecture','Deploy community piezometers at village scale — make groundwater visible before it disappears','Build 3 urban millet retail brands and 10 institutional procurement contracts — pull, not push','Create a tank maintenance endowment — one-time restoration with a revenue stream (fish, silt, irrigation fees) for perpetual upkeep','Name caste in the water and land analysis — disaggregate all data by social group, publish, and use it for targeting'],
+    rings:[
+      {key:'land', label:'The dryland', sub:'Red soil, black cotton soil, rain-shadow', question:'What is the water table? Are tanks functional? Is soil health declining? What grows without irrigation?'},
+      {key:'people', label:'Rainfed farmers', sub:'Smallholders, tenant farmers, landless labour', question:'What is the debt cycle? Are millets viable? Do women control household food? Is migration seasonal or permanent?'},
+      {key:'commons', label:'Tank systems & panchayats', sub:'Historical water commons, village governance', question:'Who maintains the tanks? Are panchayats functional? Is MGNREGA building durable assets?'},
+      {key:'tools', label:'Agri-tech & markets', sub:'Crop advisory, market linkage, credit', question:'Do farmers have weather data? Are FPOs working? Can dryland produce find premium markets?'}
+    ]
+  },
+  {
+    key:'gangetic', label:'Indo-Gangetic Plain',
+    states:['Uttar Pradesh','Bihar','Jharkhand','West Bengal'],
+    context:'The most densely populated landscape on earth. Groundwater collapsing. Flood-drought oscillation. Agrarian distress, caste-structured labour, seasonal migration. The Ganga itself — polluted, sacred, contested.',
+    health:[
+      {metric:'Groundwater',status:'critical',fact:'Water table dropping 1-3m per decade across western UP and Bihar. Arsenic contamination in Bengal.'},
+      {metric:'Air quality',status:'critical',fact:'IGP has 9 of world\'s 10 most polluted cities. PM2.5 levels 8-10x WHO limits in winter.'},
+      {metric:'River water quality',status:'critical',fact:'Ganga BOD exceeds safe limits in 60%+ of monitoring stations. Tributaries are worse.'},
+      {metric:'Child nutrition',status:'declining',fact:'Bihar and UP have among India\'s highest stunting rates. Improvement has stalled.'},
+      {metric:'Migration',status:'critical',fact:'40M+ seasonal migrants from UP-Bihar. Most without social protection at destination.'}
+    ],
+    needs:['Groundwater recharge before the aquifer crashes','River health — not just Ganga cleanup but tributary systems','Enterprise for youth staying behind','Women\'s economic agency beyond SHG savings','Flood-resilient settlement patterns'],
+    fills:['A recharge infrastructure programme at block scale — managed aquifer recharge with community ownership, not just check dams','Adopt-a-tributary model — each partner takes one Ganga tributary from source to confluence, monitors, restores, reports publicly','District-level enterprise hubs like Jagriti but in every high-migration district — not one train journey, permanent infrastructure','Women-owned production companies, not SHGs — ownership of assets, brands, and supply chains, not just group savings accounts','Flood-adapted housing and settlement design — amphibious architecture, raised platforms, seasonal-use buildings — partner with NIT Patna'],
+    risks:['The aquifer crisis is invisible — when it surfaces it will affect 200M+ people simultaneously','Ganga cleanup is a government narrative — tributary health, which determines the main stem, has no partner','SHG model has plateaued — women save but do not earn or own at scale','Seasonal migration is treated as a labour issue, not a settlement-design failure','Air quality in the IGP is a public health emergency with no ecosystem partner addressing it'],
+    counters:['Install 10,000 community piezometers — make aquifer levels visible in real-time to every panchayat, publish monthly','Fund 5 tributary health organisations — Gomti, Son, Gandak, Kosi, Damodar — each with monitoring, restoration, and public reporting mandates','Convert 100 SHGs into producer companies with independent balance sheets, registered brands, and market access beyond the group','Commission settlement-pattern research — map where migrants come from, why, and what would keep them — then design for that','Recruit or build an air quality partner — this is the most lethal environmental crisis in the IGP and the ecosystem has zero presence'],
+    rings:[
+      {key:'land', label:'The floodplain', sub:'Alluvial soil, seasonal floods, disappearing water table', question:'Is the aquifer recharging? Are tributaries alive? What is the arsenic and fluoride load? Is soil still productive?'},
+      {key:'people', label:'Density & migration', sub:'200M+ people, seasonal migration, caste-stratified labour', question:'Who stays and who migrates? What do women earn? Is child nutrition improving or stalling?'},
+      {key:'commons', label:'Panchayats & public systems', sub:'Schools, health centres, MGNREGA', question:'Do public systems deliver? Are panchayats captured or functional? Is civic data available?'},
+      {key:'tools', label:'Platforms & enterprise', sub:'Fintech, agri-tech, skilling, digital access', question:'Is digital access equitable? Are enterprise models reaching the most marginalised? What voice-tech exists?'}
+    ]
+  },
+  {
+    key:'thar-aravalli', label:'Thar, Aravalli & Western Drylands',
+    states:['Rajasthan','Gujarat','Madhya Pradesh'],
+    context:'Desert and semi-arid. Pastoral commons being enclosed. Aravalli mining eating the only barrier between Thar and Delhi. Kutch — saline, resilient, culturally rich. Tribal belt of southern Rajasthan and western MP.',
+    health:[
+      {metric:'Aravalli cover',status:'critical',fact:'31% of Aravalli range is degraded. Mining continues in 115+ sites despite court orders.'},
+      {metric:'Pastoral commons',status:'critical',fact:'40%+ of gauchar (grazing) land in Rajasthan has been encroached or diverted.'},
+      {metric:'Groundwater',status:'declining',fact:'Dark-zone blocks expanding. Fluoride contamination affects 11 districts in Rajasthan.'},
+      {metric:'Desert advance',status:'declining',fact:'Thar expanding eastward. Sand dune movement detected in areas that were agricultural 20 years ago.'},
+      {metric:'Traditional water systems',status:'declining',fact:'Johads, tankas, and baoris exist but 70%+ are non-functional. Practitioners are aging out.'}
+    ],
+    needs:['Pastoral commons protection — legal and physical','Aravalli restoration before the barrier collapses','Water harvesting revival — traditional systems modernised','Tribal food sovereignty in the Banswara-Jhabua belt','Solar transition that does not displace commons'],
+    fills:['A commons legal defence fund — land-title documentation, boundary mapping, and litigation capacity for pastoral communities','An Aravalli restoration authority with enforcement teeth — not just plantation but mining-ban enforcement and quarry rehabilitation','A school of traditional water harvesting — apprenticeship model pairing young engineers with master johads/tanka builders','A tribal food sovereignty network across the Banswara-Jhabua-Dahod belt — seed banks, nutrition gardens, and market access controlled by women','Community-owned solar cooperatives on non-common land — if solar must come, communities must own it, not rent out their commons'],
+    risks:['Solar parks are being built on pastoral commons — the clean energy transition is displacing the people who need it most','Aravalli mining continues despite Supreme Court orders — governance failure is structural, not informational','Pastoral communities have no legal category — they fall between farmer and forest-dweller and get nothing','Groundwater markets in Gujarat are privatising a commons with no regulation','Traditional water harvesting knowledge exists but has no institutional home — it lives in aging practitioners'],
+    counters:['Map every solar park against commons land — publish the overlap, make it a public accountability tool','Build a real-time mining violation tracker for the Aravalli range — satellite imagery, legal petitions, public dashboard','Draft and advocate for a Pastoralist Rights Act — like FRA but for nomadic and semi-nomadic communities','Regulate groundwater markets — metering, pricing, and community allocation before the invisible hand drains the aquifer','Record 100 master water builders — video, technique documentation, site visits — before they are gone'],
+    rings:[
+      {key:'land', label:'The desert edge', sub:'Thar, Aravalli, Rann, scrubland', question:'Is the Aravalli regenerating? Are pastoral routes passable? Is desertification advancing? What is the salinity front?'},
+      {key:'people', label:'Pastoralists & tribals', sub:'Rabaris, Bhils, Meenas, Garasia', question:'Can pastoralism survive? Do tribals have food sovereignty? Are traditional crafts viable? What do women own?'},
+      {key:'commons', label:'Orans, gauchar & governance', sub:'Sacred groves, grazing commons, village institutions', question:'Are orans protected? Is gauchar land being encroached? Do village institutions govern the commons?'},
+      {key:'tools', label:'Solar, water & markets', sub:'Renewable energy, harvesting tech, craft markets', question:'Is solar benefiting communities or displacing them? Do water harvesting structures last? Can craft reach fair markets?'}
+    ]
+  },
+  {
+    key:'coast', label:'Coastal & Marine India',
+    states:['Kerala','Tamil Nadu','Karnataka','Goa','Maharashtra','Odisha','West Bengal','Andaman and Nicobar Islands','Lakshadweep'],
+    context:'7,500 km of coastline. Fishing communities, mangrove systems, coral reefs, cyclone exposure. Sea-level rise is not future — it is now. Koli, Meenavar, Mogaveera — fishing cultures older than agriculture.',
+    health:[
+      {metric:'Sea level',status:'critical',fact:'Rising 3.3mm/year along Indian coast. Sundarbans and Lakshadweep facing submersion within decades.'},
+      {metric:'Fish catch',status:'declining',fact:'Artisanal catch per unit effort declining 2-4% annually. Overfishing by mechanised trawlers.'},
+      {metric:'Mangrove cover',status:'stable',fact:'Slight national increase but quality declining. Planted mangroves have low species diversity.'},
+      {metric:'Coral reefs',status:'critical',fact:'Gulf of Mannar and Andaman reefs show 30-40% bleaching in recent events. Recovery is slow.'},
+      {metric:'Cyclone intensity',status:'critical',fact:'Rapid intensification events doubled since 2000. Arabian Sea cyclones — previously rare — are now regular.'}
+    ],
+    needs:['Mangrove and reef restoration as climate infrastructure','Fisher community rights and sustainable fisheries governance','Cyclone-resilient settlement and livelihood patterns','Marine protected areas that include communities','Coastal erosion monitoring and response'],
+    fills:['A coastal climate infrastructure fund — mangrove and reef restoration valued as storm barriers and carbon sinks, not just biodiversity projects','A national fisher rights legal body — like a NALSA panel but for maritime and coastal communities, with traditional fishing zone mapping','Cyclone-resilient building codes and construction training for coastal settlements — partner with NDMA and state disaster management authorities','Community-designed MPAs — marine spatial planning where fishers draw the boundaries, not distant bureaucrats','A coastline erosion observatory — satellite plus ground-truth, ward-level, updated annually, publicly accessible'],
+    risks:['Sea-level rise is already displacing communities in Sundarbans and Lakshadweep — no partner has a relocation framework','Industrial fishing is destroying artisanal livelihoods but the policy battle has no civil society anchor','CRZ violations are systemic — enforcement is captured by real estate and port interests','Coral reef monitoring exists in fragments — no integrated coastline-scale system','Mangrove restoration is a carbon credit play — community benefit is unproven'],
+    counters:['Develop a climate relocation protocol — planned, dignified, rights-based — before it happens chaotically','Fund a fisheries policy advocacy body with legal and economic capacity to fight industrial trawling permits','Build a CRZ violation public tracker — satellite imagery, complaint mechanism, legal follow-through','Stitch together reef monitoring fragments into one national reef health dashboard — real-time, open-access','Mandate community benefit-sharing in all mangrove carbon credit projects — no credits without community consent and revenue share'],
+    rings:[
+      {key:'land', label:'The littoral', sub:'Mangroves, reefs, estuaries, backwaters', question:'Are mangroves expanding or retreating? Is coral bleaching monitored? Are estuaries silting? What is the erosion rate?'},
+      {key:'people', label:'Fishing communities', sub:'Artisanal fishers, island populations, coastal labour', question:'Is the catch declining? Do fishers have insurance? Are traditional fishing rights protected? Who controls the boats?'},
+      {key:'commons', label:'Marine governance', sub:'MPAs, fishing zones, CRZ, disaster response', question:'Is CRZ enforced? Do fishing communities have a voice in MPA design? Is disaster preparedness real or paper?'},
+      {key:'tools', label:'Monitoring & resilience', sub:'Ocean data, early warning, alternative livelihoods', question:'Is there real-time ocean monitoring? Do cyclone warnings reach the last mile? Are there livelihood alternatives beyond fishing?'}
+    ]
+  },
+  {
+    key:'nilgiris', label:'Nilgiris–Wayanad–Coorg Landscape',
+    states:['Tamil Nadu','Kerala','Karnataka'],
+    context:'Where the Western and Eastern Ghats meet. Shola-grassland mosaic, tea and coffee estates, Irula, Kurumba, Paniya communities. Highest density of partner presence in this atlas. A living laboratory for conservation and community.',
+    health:[
+      {metric:'Shola-grassland',status:'declining',fact:'Grasslands being planted with exotic trees under compensatory afforestation. Shola fragments shrinking.'},
+      {metric:'Invasive species',status:'critical',fact:'Lantana covers 40%+ of forest understory. Eucalyptus and wattle plantations displace native species.'},
+      {metric:'Human-wildlife conflict',status:'critical',fact:'Elephant crop raids up 3x in Wayanad. 50+ human deaths and 100+ elephant deaths annually in the landscape.'},
+      {metric:'Adivasi land',status:'declining',fact:'Land alienation continues through debt-driven sales despite protective legislation.'},
+      {metric:'Water systems',status:'declining',fact:'Springs and streams drying earlier each year. Plantation water demand exceeds natural recharge.'}
+    ],
+    needs:['Shola-grassland restoration — not afforestation','Indigenous community tenure and livelihood security','Human-wildlife coexistence at landscape scale','Invasive species management — lantana, eucalyptus','Connecting research stations to community action'],
+    fills:['A grassland protection protocol that blocks compensatory afforestation on grasslands — legal instrument, not just research','An adivasi land rights cell in the Nilgiris — paralegal services, FRA tracking, anti-alienation litigation','A landscape-level HWC insurance and response system — not village-by-village but covering the entire elephant range','An invasive species removal enterprise — lantana furniture (like ATREE\'s model) scaled across the landscape with employment guarantees','A research-to-panchayat translation body — takes published findings and converts them into gram sabha agenda items and action plans'],
+    risks:['Partner density is high but overlap is also high — multiple orgs doing similar work without coordination','Afforestation schemes plant the wrong species in grasslands, destroying the ecosystem they claim to save','Research output is prolific but translation to panchayat-level action is weak','Tourism is growing faster than carrying capacity studies — the landscape is being loved to death','Adivasi land alienation continues through legal loopholes despite FRA'],
+    counters:['Convene a Nilgiris partner coordination council — shared landscape plan, divided geographies, no duplication','Lobby to exempt shola-grassland landscapes from compensatory afforestation — this is a policy fight, not a planting problem','Hire 10 research translators embedded in panchayats — their job is to turn papers into plans','Commission and enforce a carrying capacity study for the Nilgiris Biosphere Reserve — cap visitor numbers','Fund an adivasi-led land rights watchdog — not an NGO that works on land rights, an adivasi organisation that holds the mandate'],
+    rings:[
+      {key:'land', label:'The shola-grassland', sub:'Montane forests, grasslands, plantations', question:'Is the shola-grassland mosaic intact? Are invasives spreading? Is the canopy native or plantation? What is the fire regime?'},
+      {key:'people', label:'Adivasi & estate communities', sub:'Irula, Kurumba, Paniya, estate workers', question:'Do indigenous communities have FRA titles? Are NTFPs reaching fair markets? What do estate workers earn? Is outmigration rising?'},
+      {key:'commons', label:'Research & governance', sub:'Field stations, biosphere reserve, BMCs', question:'Are research findings reaching panchayats? Is the biosphere reserve buffer functional? Do BMCs exist and act?'},
+      {key:'tools', label:'Conservation practice', sub:'Restoration protocols, citizen science, eco-tourism', question:'Are restoration protocols standardised? Is citizen science feeding into policy? Does eco-tourism benefit communities or extract from them?'}
+    ]
+  },
+  {
+    key:'central-tribal', label:'Central Tribal Heartland',
+    states:['Jharkhand','Chhattisgarh','Odisha','Madhya Pradesh'],
+    context:'India\'s mineral and forest core — also its most marginalised people. Adivasi displacement for mining, dams, and conservation. PESA and FRA exist on paper. Naxal conflict a symptom of governance failure. Sal forests, bauxite plateaus, river valleys.',
+    health:[
+      {metric:'Forest rights',status:'critical',fact:'Over 50% of FRA claims rejected. Community forest rights granted in less than 5% of eligible areas.'},
+      {metric:'Mining displacement',status:'critical',fact:'4M+ people displaced by mining and dams in central India since 2000. Rehabilitation incomplete for most.'},
+      {metric:'Nutrition',status:'critical',fact:'Child stunting rates above 40% in tribal districts. Anaemia above 60% among women.'},
+      {metric:'Forest cover',status:'stable',fact:'Dense forest stable but degradation increasing. Sal regeneration declining in logged areas.'},
+      {metric:'Conflict',status:'declining',fact:'Armed conflict declining in intensity but security-state apparatus remains. Civic space constricted.'}
+    ],
+    needs:['Forest rights implementation — not just titles but governance','Mining displacement accountability and rehabilitation','Community forest enterprises — not just conservation','PESA and gram sabha strengthening','Women\'s collectives as the real governance unit'],
+    fills:['A post-FRA governance support body — not just title filing but community forest management plans, budgets, and enforcement mechanisms','A mining displacement legal clinic — pro bono litigation, rehabilitation monitoring, and public interest cases','Community-owned NTFP processing units — in the forest, not the city — so value stays where the gatherer lives','A PESA implementation tracker — which gram sabhas have exercised consent, which have been bypassed, published as a public scorecard','Women-led forest governance committees with independent bank accounts, signatory power, and direct gram sabha seats'],
+    risks:['Mining corporations operate with de facto state protection — civil society is outmatched on legal and financial resources','FRA titles granted but forest bureaucracy still controls access — the right exists on paper, not on the ground','Naxal conflict is used to justify militarisation that further displaces communities','NTFP value chains are extractive — the processor captures most value, not the gatherer','Women do the work of governance but men hold the titles and bank accounts'],
+    counters:['Pool legal resources — a shared mining litigation fund across central Indian partners, not each org fighting alone','Audit FRA implementation — village-by-village, are rights exercised or blocked? Publish the audit','Decouple development from security — fund civilian partners who can operate in conflict zones without military association','Restructure NTFP chains — community ownership of processing, not just collection; fair trade certification with teeth','Require women as co-signatories on all community forest accounts and as 50% of management committee members'],
+    rings:[
+      {key:'land', label:'The forest-mineral belt', sub:'Sal forests, bauxite plateaus, river valleys', question:'Is forest cover stable? Are mining leases expanding into community forests? Are rivers dammed or free? Is soil eroding?'},
+      {key:'people', label:'Adivasi communities', sub:'Ho, Santhal, Gond, Baiga, Kondh', question:'Have FRA titles been granted? Is displacement ongoing? Are traditional livelihoods viable? What is the nutrition status?'},
+      {key:'commons', label:'Rights & governance', sub:'PESA, FRA, gram sabhas, community forest rights', question:'Are gram sabhas exercising consent? Is PESA implemented? Do communities control their forests? Is there legal support?'},
+      {key:'tools', label:'Enterprise & voice', sub:'NTFP value chains, producer orgs, community media', question:'Can forest produce reach markets without middlemen? Do FPOs exist? Is there community media? Are there digital platforms?'}
+    ]
+  },
+  {
+    key:'urban-india', label:'Urban India',
+    states:['Karnataka','Maharashtra','Tamil Nadu','Telangana','NCT of Delhi','Gujarat','West Bengal','Haryana','Uttar Pradesh'],
+    context:'35% of India, producing 70% of GDP. Bengaluru, Mumbai, Delhi, Chennai, Hyderabad, Pune, Kolkata. Waste crisis, water crisis, mobility crisis, civic governance deficit. But also where innovation concentrates and civic energy is highest.',
+    health:[
+      {metric:'Air quality',status:'critical',fact:'Delhi, Kolkata, Mumbai exceed WHO PM2.5 limits 10x+ in winter. 1.6M deaths/year from air pollution.'},
+      {metric:'Urban water',status:'critical',fact:'Bengaluru groundwater dropped 200ft in 20 years. Chennai, Hyderabad face Day Zero scenarios.'},
+      {metric:'Waste processing',status:'declining',fact:'Only 30% of urban waste is processed. Rest goes to dumps. Informal workers handle 60% of recycling.'},
+      {metric:'Urban lakes',status:'critical',fact:'Bengaluru lost 80% of its lakes. Mumbai\'s wetlands shrinking 10% per decade.'},
+      {metric:'Municipal revenue',status:'critical',fact:'Indian cities collect 0.5% of GDP in own revenue vs 6-8% in comparable economies. Structural dependence.'}
+    ],
+    needs:['Waste systems that work — segregation, processing, dignity for workers','Water security — harvesting, reuse, aquifer recharge','Civic data infrastructure — open, accessible, actionable','Green public space and urban biodiversity','Municipal finance reform so cities can invest in themselves'],
+    fills:['A city-scale decentralised waste processing network with waste-worker cooperatives owning the processing infrastructure — not outsourced to private operators','Urban water utilities that combine supply, reuse, harvesting, and recharge under one governance body — like BWSSB but accountable and transparent','A municipal open data mandate — every city above 1M must publish budgets, contracts, and service data in machine-readable format','An urban biodiversity audit and protection protocol — statutory protection for urban wetlands, tree cover, and green corridors with public monitoring','A municipal revenue reform campaign — property tax modernisation, land value capture, and own-source revenue targets with state-level advocacy'],
+    risks:['Cities generate 70% of GDP but control less than 1% of public revenue — municipal dependence on state transfers is a governance trap','Informal workers run urban systems (waste, construction, domestic work) but have no social protection or voice','Urban water is managed as an engineering problem — the governance, equity, and pricing failures are unaddressed','Civic tech platforms exist but civic participation is declining — tools without political will change nothing','Urban biodiversity is an afterthought — lakes, trees, and wetlands are sacrificed for infrastructure with no accounting'],
+    counters:['Advocate for the 74th Amendment to actually be implemented — devolution of funds, functions, and functionaries to municipalities','Build an informal workers\' protection platform — identity, insurance, grievance, skill certification — modelled on e-Shram but actually useful','Reframe urban water from engineering to governance — water budgets, equity audits, reuse mandates, pricing reform','Pair civic tech with civic organising — tools need movements behind them, not just users; fund the organising, not just the platform','Create a legal instrument — Urban Wetland Protection Act or equivalent — that makes it criminal to destroy urban water bodies'],
+    rings:[
+      {key:'land', label:'The urban ecology', sub:'Lakes, trees, air, water table', question:'Are lakes alive? Is the canopy growing? What is the AQI? Is the water table accessible? Are urban wetlands protected?'},
+      {key:'people', label:'Citizens & workers', sub:'Formal, informal, migrant, marginalised', question:'Who picks the waste? Who builds the city? Do migrant workers have shelter? Is affordable housing real?'},
+      {key:'commons', label:'Civic infrastructure', sub:'Municipal finance, data, governance, participation', question:'Do cities publish budgets? Is civic data open? Can citizens participate in planning? Are ward committees active?'},
+      {key:'tools', label:'Platforms & systems', sub:'Civic tech, waste tech, mobility, green infrastructure', question:'Is there a civic data platform? Are waste systems decentralised? Is public transport expanding? Are green buildings the norm?'}
+    ]
+  },
+  {
+    key:'sundarbans', label:'Sundarbans & Bengal Delta',
+    states:['West Bengal'],
+    context:'The world\'s largest mangrove delta. Cyclone frontline. Tiger-human interface. Salinity ingress eating farmland. Islands disappearing. Climate displacement is not future — it is annual.',
+    health:[
+      {metric:'Island land area',status:'critical',fact:'4 islands already submerged. Ghoramara lost 50% of its area. Mousuni losing 200m of coastline per decade.'},
+      {metric:'Salinity',status:'critical',fact:'Freshwater zone retreating 5-10 km inland per decade. Paddy becoming unviable in previously fertile areas.'},
+      {metric:'Cyclone frequency',status:'critical',fact:'3 severe cyclones (Amphan, Yaas, Remal) in 5 years. Each displaces 1M+ people.'},
+      {metric:'Tiger-human conflict',status:'stable',fact:'Tiger attacks declining due to buffer projects. But human encroachment into reserve continues.'},
+      {metric:'Drinking water',status:'critical',fact:'70%+ of tube wells produce brackish water. Rainwater harvesting is the only reliable source.'}
+    ],
+    needs:['Climate-resilient livelihoods beyond rice and fishing','Mangrove restoration as storm infrastructure','Island community relocation planning','Freshwater access as salinity advances','Women\'s disaster preparedness networks'],
+    fills:['Saline-tolerant aquaculture and agriculture enterprises — crab, prawn, salt-resistant rice varieties','Community mangrove nurseries with payment-for-ecosystem-services revenue','A planned retreat framework — dignified, rights-based, with land allocation on the mainland','Rainwater harvesting at household scale — every home needs a tank, not shared ponds that go saline','Women-led cyclone preparedness committees with satellite phones, boats, and first-response training'],
+    risks:['Displacement is happening without a plan — people leave after each cyclone, settle in Kolkata slums','Mangrove planting is a photo-op without survival rate data — most planted saplings die','Tiger conservation dominates funding while human survival is under-resourced','Salinity is advancing 5-10 km inland per decade — no partner maps or tracks it','The Sundarbans are administratively split between India and Bangladesh — ecosystem management stops at the border'],
+    counters:['Build a Sundarbans migration observatory — track who leaves, where they go, what they need','Mandate 3-year survival audits for all mangrove planting — no credit without proof','Rebalance funding — tiger and human are the same conservation unit, fund both','Commission an annual salinity advance map — satellite + ground truth, publicly available','Initiate a cross-border Sundarbans civil society dialogue — even if governments won\'t cooperate, communities can'],
+    rings:[
+      {key:'land', label:'The delta', sub:'Mangroves, tidal channels, disappearing islands', question:'How many islands have lost land this decade? Is the mangrove line advancing or retreating?'},
+      {key:'people', label:'Island communities', sub:'Fishers, crab gatherers, rice farmers', question:'How many people were displaced by the last cyclone? What do women earn? Is freshwater available?'},
+      {key:'commons', label:'Disaster governance', sub:'Cyclone shelters, embankments, relief systems', question:'Do cyclone shelters exist on every island? Are embankments maintained? Does relief reach in time?'},
+      {key:'tools', label:'Monitoring & adaptation', sub:'Salinity tracking, early warning, resilient agriculture', question:'Is there real-time salinity data? Do early warnings reach every hamlet? Are resilient crops available?'}
+    ]
+  },
+  {
+    key:'punjab-haryana', label:'Punjab-Haryana Breadbasket',
+    states:['Punjab','Haryana'],
+    context:'India\'s food security engine — and its most ecologically damaged agricultural landscape. Groundwater falling 1m/year. Stubble burning choking north India. Pesticide-cancer corridor. MSP-dependent monoculture trap.',
+    health:[
+      {metric:'Groundwater',status:'critical',fact:'79% of Punjab blocks are over-exploited. Water table falling 1m/year. 15-20 years to crisis at current rates.'},
+      {metric:'Soil organic carbon',status:'critical',fact:'Continuous rice-wheat has depleted soil carbon by 50%+. Micronutrient deficiency widespread.'},
+      {metric:'Stubble burning',status:'critical',fact:'50,000-80,000 fires annually. Smoke blankets 500M+ people across north India for weeks.'},
+      {metric:'Cancer incidence',status:'critical',fact:'Malwa belt cancer rates 2x national average. Linked to pesticide exposure. "Cancer train" to Bikaner is real.'},
+      {metric:'Farm viability',status:'declining',fact:'Input costs rising faster than MSP. Average farm size shrinking. Debt rising.'}
+    ],
+    needs:['Crop diversification away from rice-wheat monoculture','Groundwater recharge before the aquifer crashes','Stubble management without burning','Pesticide reduction and soil health revival','Farmer income diversification beyond MSP dependence'],
+    fills:['A crop transition incentive fund — pay farmers to grow millets, oilseeds, pulses for 3 years until markets mature','Managed aquifer recharge at canal-command scale — not farm ponds but engineered recharge along the canal network','In-situ stubble decomposition enterprise — bio-decomposer production, custom hiring centres, farmer cooperatives','An agroecology transition programme — ZBNF/organic/regenerative with guaranteed procurement for transitioning farmers','Non-farm rural enterprise — food processing, renewable energy cooperatives, rural services — so farming is not the only livelihood'],
+    risks:['No Rainmatter partner works in Punjab or Haryana — the most consequential agricultural landscape in India is entirely absent from the portfolio','Groundwater depletion here affects national food security — the crash will be a crisis of 1.4 billion, not just 2 states','Stubble burning is an airborne public health emergency for 500M+ people across the IGP — no partner addresses it','The MSP-procurement system creates a political lock-in that no NGO can disrupt — this is a policy problem masquerading as a farm problem','Cancer rates in the Malwa belt are linked to pesticide use — the health crisis is invisible in environmental portfolios'],
+    counters:['This is the single most important gap in the entire portfolio — find or build at least 2 partners here','Commission a groundwater emergency assessment — how many years remain at current extraction rates?','Fund a stubble alternatives pilot — 50 villages, 3 techniques, 2 seasons, published results','Connect with ICAR and Punjab Agricultural University — the science exists, the implementation pipeline is broken','Map the pesticide-health corridor — partner with PGIMER Chandigarh for epidemiological data'],
+    rings:[
+      {key:'land', label:'The aquifer', sub:'Canal-irrigated, tube-well dependent, falling water table', question:'How many years of groundwater remain? Is any recharge happening? What is the energy subsidy cost?'},
+      {key:'people', label:'Farmers & labour', sub:'Jat farmers, migrant labour, cancer belt', question:'Is income growing or stagnant? What is the debt load? Is health declining? Who does the manual labour?'},
+      {key:'commons', label:'Policy & procurement', sub:'MSP, FCI, state procurement, subsidies', question:'Can the MSP system be reformed? Is diversification politically possible? Who controls the policy?'},
+      {key:'tools', label:'Agri-tech & transition', sub:'Stubble solutions, precision farming, alternatives', question:'Are bio-decomposers available? Is precision irrigation adopted? Do diversification pilots exist?'}
+    ]
+  },
+  {
+    key:'bundelkhand', label:'Bundelkhand',
+    states:['Uttar Pradesh','Madhya Pradesh'],
+    context:'Chronic drought belt straddling UP and MP. Stone quarries, distress migration, water scarcity so severe that water trains are sent. Historically neglected, administratively split, perpetually in crisis.',
+    health:[
+      {metric:'Water availability',status:'critical',fact:'Per capita water availability 40% below national average. Wells dry by February most years.'},
+      {metric:'Migration',status:'critical',fact:'60-80% of working-age men migrate seasonally. Women and elderly left to manage farms.'},
+      {metric:'Land degradation',status:'critical',fact:'30%+ of land is degraded. Quarrying, overgrazing, and erosion. Regeneration efforts are minimal.'},
+      {metric:'Child malnutrition',status:'critical',fact:'Stunting above 45% in Bundelkhand districts. Among the worst in India.'},
+      {metric:'Governance',status:'critical',fact:'Split between UP and MP. Neither state has a Bundelkhand-specific development plan that functions.'}
+    ],
+    needs:['Drought-proof water infrastructure at landscape scale','Migration as a design problem — not just a coping mechanism','Women\'s land and asset ownership','Quarry rehabilitation and alternative livelihoods','Governance integration across the UP-MP state line'],
+    fills:['A Bundelkhand water mission — check dams, farm ponds, groundwater recharge at the scale of the Paani Foundation model but adapted for hard-rock geology','A migration support infrastructure — portable identity, skill certification, destination-city support, return pathways','Women-titled land programmes — every MGNREGA asset built on women\'s names, linked to bank accounts they control','Quarry-to-forest conversion — mined land restoration with livelihood trees, funded by mining rehabilitation bonds','A cross-state Bundelkhand development authority — shared data, shared planning, shared accountability'],
+    risks:['No Rainmatter partner works specifically in Bundelkhand — a region with 20M+ people in chronic water distress','The region is administratively invisible — split between 2 states, neither claims full responsibility','Water trains and drought relief are normalised — the crisis is permanent but treated as episodic','Stone quarries destroy land and employ bonded/child labour — the supply chain connects to urban construction','Women walk hours for water but own no water infrastructure — gender is the invisible axis of the water crisis'],
+    counters:['Enter Bundelkhand with at least one anchor partner — this is a region that defines structural neglect','Advocate for a unified Bundelkhand development framework across UP and MP','Stop treating drought as an event — build permanent water infrastructure, not relief cycles','Trace the quarry-to-construction supply chain — bring accountability from Bundelkhand stone to Delhi buildings','Ensure every water asset is titled in women\'s names — this is the single highest-leverage gender intervention in the region'],
+    rings:[
+      {key:'land', label:'The hard rock', sub:'Rocky terrain, seasonal rivers, mined land', question:'Is any water harvesting infrastructure permanent? Are quarries being rehabilitated? Is soil cover increasing?'},
+      {key:'people', label:'Migrants & women', sub:'Distress migrants, women-headed households', question:'What percentage of men migrate? Do women own land? Is child labour in quarries declining?'},
+      {key:'commons', label:'Split governance', sub:'UP side, MP side, no coordination', question:'Is there any cross-state planning? Do panchayats function? Is MGNREGA creating durable assets?'},
+      {key:'tools', label:'Water & livelihood tech', sub:'Hard-rock hydrogeology, revival techniques', question:'Is hard-rock recharge technology deployed? Are alternative livelihoods available beyond quarrying and migration?'}
+    ]
+  },
+  {
+    key:'ladakh-cold', label:'Ladakh & Cold Desert',
+    states:['Ladakh','Jammu and Kashmir','Himachal Pradesh'],
+    context:'High-altitude cold desert. Glaciers retreating. Traditional water systems (ice stupas, kuls) under climate stress. Militarisation and tourism pressure. Fragile ecology at 3,000-5,000m. Newly a UT with no legislature.',
+    health:[
+      {metric:'Glacier mass',status:'critical',fact:'Himalayan glaciers lost 40% of area since Little Ice Age. Retreat accelerating post-2000.'},
+      {metric:'Tourism load',status:'critical',fact:'Leh receives 5x its resident population in tourists annually. Water and waste systems overwhelmed.'},
+      {metric:'Permafrost',status:'declining',fact:'Thawing permafrost destabilising high-altitude roads and settlements. Data is sparse.'},
+      {metric:'Pasture health',status:'declining',fact:'Changthang pastures degrading. Pashmina goat overgrazing meets climate-driven vegetation shift.'},
+      {metric:'Democratic governance',status:'critical',fact:'UT since 2019 with no elected legislature. Environmental decisions made in Delhi, not Leh.'}
+    ],
+    needs:['Glacier and permafrost monitoring','Traditional water system revival — ice stupas, kuls, nallah management','Sustainable tourism governance before carrying capacity is breached','Pasture and pastoral route protection','Renewable energy for off-grid settlements'],
+    fills:['A high-altitude climate observatory network — temperature, snowfall, glacier retreat, permafrost — long-term, open-access data','An ice stupa and kul revival programme — combining traditional Ladakhi engineering with modern materials and monitoring','A tourism carrying capacity authority with enforcement power — cap permits, regulate homestays, manage waste','Legal protection for pasture routes — mapping, notification, and conflict resolution for Changpa and other pastoral communities','Community-owned micro-hydro and solar installations — energy sovereignty for remote settlements, not grid dependence'],
+    risks:['Zero Rainmatter partner presence — the entire cold desert and trans-Himalayan region is absent from the portfolio','Glacier retreat will eliminate water supply for millions downstream — this is a slow-motion crisis with no monitoring partner','Tourism is exploding without infrastructure — Ladakh receives more tourists than its water and waste systems can handle','Military roads and installations fragment pastures and wildlife corridors — no civil society is tracking the ecological cost','Ladakh has no elected legislature — communities have no democratic channel for environmental governance'],
+    counters:['This is a frontier gap — partner with local Ladakhi organisations like SECMOL, Leh Nutrition Project, or Snow Leopard Conservancy','Fund a 20-year glacier monitoring programme — this is existential for the entire Indus basin','Commission an independent tourism carrying capacity study — publish it, campaign on it','Map every military road against wildlife corridors and pasture routes — make the trade-offs visible','Support Ladakhi civil society in advocating for environmental governance powers within the UT framework'],
+    rings:[
+      {key:'land', label:'The cryosphere', sub:'Glaciers, permafrost, cold desert, high passes', question:'How fast are glaciers retreating? Is permafrost thawing? What is the snowfall trend?'},
+      {key:'people', label:'Mountain communities', sub:'Ladakhi farmers, Changpa pastoralists', question:'Is traditional agriculture viable? Are pastoral routes accessible? Can young people stay?'},
+      {key:'commons', label:'Governance vacuum', sub:'UT without legislature, military presence', question:'Who governs land use? Do communities have a voice? Is environmental policy made locally or in Delhi?'},
+      {key:'tools', label:'Adaptation & energy', sub:'Ice stupas, solar, monitoring', question:'Are ice stupas scaling? Is solar reaching remote villages? Is there any climate data infrastructure?'}
+    ]
+  },
+  {
+    key:'konkan-goa', label:'Konkan & Goa Coast',
+    states:['Maharashtra','Goa','Karnataka'],
+    context:'Narrow coastal strip between the Western Ghats and the Arabian Sea. Laterite plateaus, estuarine systems, Koli and Gabit fishing communities. Port expansion, real estate, and tourism eating the coast. Goa — India\'s smallest state with the highest per-capita ecological pressure.',
+    health:[
+      {metric:'Laterite plateaus',status:'critical',fact:'No legal protection. Being quarried for construction. Globally rare habitat with high endemism.'},
+      {metric:'Estuary health',status:'declining',fact:'Major estuaries (Mandovi, Zuari, Karli) show rising pollution and declining fish diversity.'},
+      {metric:'Coastal erosion',status:'declining',fact:'Konkan coast losing 0.5-1m/year in erosion-prone areas. Sand mining accelerates the process.'},
+      {metric:'Tourism pressure',status:'critical',fact:'Goa receives 8M+ tourists/year. Waste generation exceeds processing capacity by 3x in peak season.'},
+      {metric:'CRZ compliance',status:'critical',fact:'Systematic violations. Construction within CRZ-I documented in multiple coastal stretches.'}
+    ],
+    needs:['Laterite plateau and rocky coast habitat protection','Fishing community rights against port and real estate expansion','Estuary and mangrove health monitoring','Sustainable tourism models that benefit villages not developers','Anti-mining enforcement in the Ghats-coast transition zone'],
+    fills:['A Konkan coastal habitat mapping project — laterite plateaus are globally rare, most are unprotected and being quarried','A fisher community legal aid network — CRZ enforcement, traditional fishing zone mapping, anti-displacement litigation','An estuary health index — salinity, biodiversity, pollution, water quality — for every major Konkan estuary','Community-managed eco-tourism cooperatives — homestay networks owned by villages, not listed on platforms that extract fees','A mining-to-restoration pipeline — every closed mine must have a funded rehabilitation plan with community oversight'],
+    risks:['Laterite plateaus are being destroyed for construction material — a globally unique habitat with zero legal protection','Port expansion (Vadhavan, Tadadi) will industrialise the coast with no environmental accountability','Goa\'s tourism model is extractive — communities bear the waste and water cost, developers take the revenue','Estuaries are pollution sinks — untreated sewage, construction debris, and plastic enter from both land and sea sides','The Konkan railway brought connectivity but also real estate speculation — coastal land prices are displacing fishing communities'],
+    counters:['Get laterite plateaus declared as ecologically sensitive — they are biodiversity hotspots that nobody has named','Build a port-impact monitoring body — independent, technical, with legal capacity to challenge EIAs','Redesign Goa tourism — cap arrivals in fragile zones, mandate waste processing per hotel, share revenue with panchayats','Commission estuary pollution audits — name the polluters, publish the data, file complaints','Create a coastal land trust — community-owned, that can acquire and protect coastal land before speculation prices them out'],
+    rings:[
+      {key:'land', label:'The coast', sub:'Laterite plateaus, estuaries, mangroves, beaches', question:'Are laterite plateaus being quarried? Are estuaries healthy? Is the mangrove line stable?'},
+      {key:'people', label:'Fishing communities', sub:'Koli, Gabit, Kunbi, migrant labour', question:'Can artisanal fishers compete with trawlers? Is coastal land still affordable? Who benefits from tourism?'},
+      {key:'commons', label:'CRZ & governance', sub:'Coastal regulation, panchayats, mining permits', question:'Is CRZ enforced? Do panchayats control tourism? Are mining permits transparent?'},
+      {key:'tools', label:'Monitoring & enterprise', sub:'Habitat mapping, water quality, eco-tourism', question:'Is there estuary monitoring? Do communities own tourism infrastructure? Is habitat data public?'}
+    ]
+  }
+];
+
+var activePlaceView = 'all';
+
+function classifyThemes(text){
+  var lower = (text||'').toLowerCase();
+  var matched = [];
+  THEMES.forEach(function(t){
+    for(var i=0;i<t.terms.length;i++){
+      if(lower.indexOf(t.terms[i])>-1){ matched.push(t.key); break; }
+    }
+  });
+  return matched;
+}
+
+function getPlaceProfile(shedKey){
+  var shed = SHEDS.find(function(s){return s.key===shedKey;});
+  if(!shed) return null;
+
+  // Partners working in ANY of the shed's states, plus Pan India orgs
+  var partners = MAP_PARTNERS.filter(function(p){
+    if(p.states.indexOf('Pan India')>-1) return true;
+    for(var i=0;i<shed.states.length;i++){
+      if(p.states.indexOf(shed.states[i])>-1) return true;
+    }
+    return false;
+  });
+  var records = partners.map(function(p){ return buildArtefactRecord(p); });
+  var catCounts = {};
+  partners.forEach(function(p){ catCounts[p.cat]=(catCounts[p.cat]||0)+1; });
+
+  var themeMap = {};
+  THEMES.forEach(function(t){ themeMap[t.key]={orgs:[],artefacts:[]}; });
+
+  partners.forEach(function(p){
+    var text = p.name+' '+p.desc+' '+p.cat;
+    var rec = records.find(function(r){return r.name===p.name;});
+    if(rec){
+      rec.tangible.concat(rec.intangible).forEach(function(a){ text+=' '+a.name+' '+a.kind+' '+a.desc; });
+    }
+    var themes = classifyThemes(text);
+    themes.forEach(function(tk){
+      if(themeMap[tk].orgs.indexOf(p.name)===-1) themeMap[tk].orgs.push(p.name);
+      if(rec){
+        rec.tangible.concat(rec.intangible).forEach(function(a){
+          var at = classifyThemes(a.name+' '+a.kind+' '+a.desc);
+          if(at.indexOf(tk)>-1) themeMap[tk].artefacts.push({org:p.name,name:a.name,url:a.url});
+        });
+      }
+    });
+  });
+
+  var covered = [], gaps = [];
+  THEMES.forEach(function(t){
+    if(themeMap[t.key].orgs.length>0) covered.push(t);
+    else gaps.push(t);
+  });
+
+  var totalArtefacts = 0;
+  records.forEach(function(r){ totalArtefacts += r.tangible.length + r.intangible.length; });
+
+  // Data layer — partners in DATA_PARTNERS list that are present in this landscape
+  var dataPartners = partners.filter(function(p){ return DATA_PARTNERS.indexOf(p.name)>-1; });
+  var dataRecords = dataPartners.map(function(p){ return records.find(function(r){return r.name===p.name;}); }).filter(Boolean);
+  var dataArtefacts = [];
+  dataRecords.forEach(function(rec){
+    rec.tangible.concat(rec.intangible).forEach(function(a){
+      var text = (a.name+' '+a.kind+' '+a.desc).toLowerCase();
+      if(text.indexOf('data')>-1||text.indexOf('platform')>-1||text.indexOf('digital')>-1||text.indexOf('monitor')>-1||
+         text.indexOf('research')>-1||text.indexOf('knowledge')>-1||text.indexOf('portal')>-1||text.indexOf('dashboard')>-1||
+         text.indexOf('index')>-1||text.indexOf('civic')>-1||text.indexOf('tech')>-1||text.indexOf('informatics')>-1||
+         text.indexOf('mapping')>-1||text.indexOf('survey')>-1||text.indexOf('observatory')>-1||text.indexOf('archive')>-1){
+        dataArtefacts.push({org:rec.name,name:a.name,kind:a.kind,desc:a.desc});
+      }
+    });
+  });
+
+  return {
+    shed: shed,
+    state: shed.label,
+    partners: partners,
+    records: records,
+    catCounts: catCounts,
+    themeMap: themeMap,
+    covered: covered,
+    gaps: gaps,
+    totalArtefacts: totalArtefacts,
+    dataPartners: dataPartners,
+    dataArtefacts: dataArtefacts
+  };
+}
+
+var selectedShed = null;
+var placeMap = null;
+var placeHighlight = null;
+var placeBaseLayer = null;
+
+function initPlaceMap(){
+  if(placeMap) return;
+  placeMap = L.map('place-map',{
+    zoomControl:false,
+    attributionControl:false,
+    maxBounds:L.latLngBounds([5,67],[38,98]).pad(0.05),
+    maxBoundsViscosity:1.0,
+    minZoom:4,
+    dragging:true,
+    scrollWheelZoom:false
+  }).setView([22,79.5],4);
+  L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png',{maxZoom:18}).addTo(placeMap);
+  // Mask outside India
+  var outerRing = [[-90,-180],[-90,180],[90,180],[90,-180],[-90,-180]];
+  var indiaCoords = [];
+  statesGeoJSON.features.forEach(function(f){
+    var polys = f.geometry.type==='MultiPolygon'?f.geometry.coordinates:[f.geometry.coordinates];
+    polys.forEach(function(poly){indiaCoords.push(poly[0]);});
+  });
+  var rings = [outerRing];
+  indiaCoords.forEach(function(ring){rings.push(ring.map(function(c){return[c[1],c[0]];}));});
+  L.polygon(rings,{stroke:false,fillColor:'#ebe2cf',fillOpacity:1,interactive:false}).addTo(placeMap);
+  // Base state outlines
+  placeBaseLayer = L.geoJSON(statesGeoJSON,{
+    style:function(){return{color:'rgba(22,121,110,0.25)',weight:1,fillColor:'rgba(22,121,110,0.03)',fillOpacity:1};}
+  }).addTo(placeMap);
+}
+
+function highlightShedOnMap(shed){
+  if(!placeMap) return;
+  if(placeHighlight){placeMap.removeLayer(placeHighlight);placeHighlight=null;}
+  if(!shed) {placeMap.setView([22,79.5],4,{animate:true}); return;}
+  var features = {type:'FeatureCollection',features:[]};
+  statesGeoJSON.features.forEach(function(f){
+    var name = (f.properties.st_nm||'').trim();
+    if(shed.states.indexOf(name)>-1) features.features.push(f);
+  });
+  if(!features.features.length) return;
+  // Color based on health
+  var hCrit = (shed.health||[]).filter(function(h){return h.status==='critical';}).length;
+  var col = hCrit>=3?'#c96a28':hCrit>=1?'#c4921a':'#16796e';
+  placeHighlight = L.geoJSON(features,{
+    style:function(){return{color:col,weight:2.5,fillColor:col,fillOpacity:0.22};}
+  }).addTo(placeMap);
+  placeMap.fitBounds(placeHighlight.getBounds().pad(0.15),{maxZoom:6,animate:true});
+}
+
+function getShedScore(shed){
+  var profile = getPlaceProfile(shed.key);
+  if(!profile) return {partners:0,gaps:0,total:shed.needs.length,needData:[]};
+  var needData = shed.needs.map(function(need){
+    var lo = need.toLowerCase();
+    var orgs = profile.partners.filter(function(p){
+      var t = (p.desc+' '+p.name).toLowerCase();
+      var w = lo.split(/\s+/).filter(function(x){return x.length>4;});
+      return w.some(function(x){return t.indexOf(x)>-1;});
+    });
+    return {need:need,orgs:orgs,gap:orgs.length===0,thin:orgs.length>0&&orgs.length<3};
+  });
+  return {
+    partners:profile.partners.length,
+    gaps:needData.filter(function(d){return d.gap;}).length,
+    thin:needData.filter(function(d){return d.thin;}).length,
+    total:shed.needs.length,
+    needData:needData
+  };
+}
+
+function renderShedGrid(){
+  var html = '';
+  SHEDS.forEach(function(shed){
+    var s = getShedScore(shed);
+    var profile = getPlaceProfile(shed.key);
+    var dataCount = profile ? profile.dataPartners.length : 0;
+    // Count critical health indicators
+    var hCrit = (shed.health||[]).filter(function(h){return h.status==='critical';}).length;
+    var hTotal = (shed.health||[]).length;
+    var barCol = hCrit>=3?'var(--orange)':hCrit>=1?'var(--gold)':'var(--teal)';
+    html += '<div class="shed-card'+(selectedShed===shed.key?' on':'')+'" data-shed="'+shed.key+'">'
+      +'<div class="shed-card-bar" style="background:'+barCol+'"></div>'
+      +'<h4>'+escapeHtml(shed.label)+'</h4>'
+      +'<div class="shed-card-meta"><span>'+s.partners+' orgs</span><span>'+s.gaps+' gaps</span><span style="color:#6b4fa0">'+dataCount+' data</span></div>';
+    // Health dots — place health
+    if(shed.health){
+      html += '<div class="shed-card-dots" title="Place health">';
+      shed.health.forEach(function(h){
+        var c = h.status==='critical'?'var(--orange)':h.status==='declining'?'var(--gold)':h.status==='improving'?'var(--teal)':'var(--muted)';
+        html += '<div class="shed-card-dot" style="background:'+c+'" title="'+escapeHtml(h.metric+': '+h.status)+'"></div>';
+      });
+      html += '</div>';
+    }
+    // Ecosystem dots — partner coverage
+    html += '<div class="shed-card-dots" title="Ecosystem coverage">';
+    for(var i=0;i<s.total;i++){
+      var nd = s.needData[i];
+      var c = nd&&nd.gap?'var(--orange)':nd&&nd.thin?'var(--gold)':'var(--teal)';
+      html += '<div class="shed-card-dot" style="background:'+c+';opacity:.5" title="'+escapeHtml(shed.needs[i])+'"></div>';
+    }
+    html += '</div></div>';
+  });
+  document.getElementById('place-grid').innerHTML = html;
+}
+
+function renderPlaceView(profile){
+  var shed = profile.shed;
+  var s = getShedScore(shed);
+  var html = '';
+
+  // Header
+  html += '<div class="place-head">'
+    +'<h3>'+escapeHtml(shed.label)+'</h3>'
+    +'<p>'+escapeHtml(shed.context)+'</p>'
+    +'</div>';
+
+  // Health of the place
+  if(shed.health){
+    html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(180px,1fr));gap:8px;margin-bottom:18px">';
+    shed.health.forEach(function(h){
+      var col = h.status==='critical'?'var(--orange)':h.status==='declining'?'var(--gold)':h.status==='improving'?'var(--teal)':'var(--muted)';
+      var icon = h.status==='critical'?'\u25CF':h.status==='declining'?'\u25CB':h.status==='improving'?'\u25B2':'\u25AC';
+      html += '<div style="padding:10px 12px;border-radius:12px;border:1px solid '+col+'22;background:'+col+'08">'
+        +'<div style="display:flex;align-items:center;gap:6px;margin-bottom:4px">'
+        +'<span style="color:'+col+';font-size:.7rem">'+icon+'</span>'
+        +'<span style="font-size:.72rem;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:'+col+'">'+escapeHtml(h.status)+'</span>'
+        +'</div>'
+        +'<div style="font-size:.8rem;font-weight:700;margin-bottom:2px">'+escapeHtml(h.metric)+'</div>'
+        +'<div style="font-size:.72rem;color:var(--ink-soft);line-height:1.45">'+escapeHtml(h.fact)+'</div>'
+        +'</div>';
+    });
+    html += '</div>';
+  }
+
+  // Risks — compact, visual
+  if(shed.risks){
+    shed.risks.forEach(function(risk,i){
+      html += '<div style="display:flex;gap:8px;padding:10px 0;border-bottom:1px solid rgba(201,106,40,.08);font-size:.82rem;line-height:1.55">'
+        +'<span style="color:var(--orange);font-weight:800;flex-shrink:0">!</span>'
+        +'<div style="flex:1;color:var(--ink-soft)">'+escapeHtml(risk);
+      if(shed.counters&&shed.counters[i]){
+        html += '<br><span style="color:var(--teal)">'+escapeHtml(shed.counters[i])+'</span>';
+      }
+      html += '</div></div>';
+    });
+  }
+
+  // Needs — dots + text, gaps first
+  var sorted = s.needData.slice().sort(function(a,b){
+    if(a.gap&&!b.gap) return -1; if(!a.gap&&b.gap) return 1;
+    if(a.thin&&!b.thin) return -1; if(!a.thin&&b.thin) return 1;
+    return 0;
+  });
+
+  html += '<div style="margin-top:18px">';
+  sorted.forEach(function(d){
+    var col = d.gap?'var(--orange)':d.thin?'var(--gold)':'var(--teal)';
+    var needIdx = shed.needs.indexOf(d.need);
+    var fill = shed.fills?shed.fills[needIdx]:null;
+
+    html += '<div style="display:flex;gap:8px;padding:8px 0;border-bottom:1px solid var(--line);font-size:.82rem;align-items:flex-start">'
+      +'<div style="width:8px;height:8px;border-radius:50%;background:'+col+';flex-shrink:0;margin-top:5px"></div>'
+      +'<div style="flex:1"><span style="font-weight:600">'+escapeHtml(d.need)+'</span>';
+    if(d.orgs.length){
+      html += ' <span style="color:var(--muted);font-size:.74rem">'+d.orgs.slice(0,3).map(function(p){return p.name;}).join(', ')+(d.orgs.length>3?' +' +(d.orgs.length-3):'')+'</span>';
+    }
+    if(fill&&(d.gap||d.thin)){
+      html += '<div style="margin-top:4px;font-size:.78rem;color:var(--teal);line-height:1.5">'+escapeHtml(fill)+'</div>';
+    }
+    html += '</div></div>';
+  });
+  html += '</div>';
+
+  // Data layer
+  var dp = profile.dataPartners || [];
+  var da = profile.dataArtefacts || [];
+  html += '<div style="margin-top:24px;padding-top:18px;border-top:2px solid #6b4fa022">';
+  html += '<div style="display:flex;align-items:center;gap:8px;margin-bottom:12px">'
+    +'<span style="display:inline-block;width:10px;height:10px;border-radius:3px;background:#6b4fa0"></span>'
+    +'<h4 style="margin:0;font-size:.88rem">Data layer</h4>'
+    +'<span style="font-size:.72rem;color:var(--muted)">'+dp.length+' data partner'+(dp.length===1?'':'s')+' | '+da.length+' data artefact'+(da.length===1?'':'s')+'</span>'
+    +'</div>';
+
+  if(!dp.length){
+    html += '<div style="font-size:.8rem;color:var(--muted);padding:8px 0">No data-oriented partners have a presence in this landscape. This is a data infrastructure gap.</div>';
+  } else {
+    // Data partners grid
+    html += '<div style="display:flex;flex-wrap:wrap;gap:6px;margin-bottom:14px">';
+    dp.forEach(function(p){
+      var netDot = p.rm
+        ? '<span style="display:inline-block;width:5px;height:5px;border-radius:50%;background:var(--teal);margin-right:4px;vertical-align:middle"></span>'
+        : '<span style="display:inline-block;width:5px;height:5px;border-radius:2px;background:var(--orange);margin-right:4px;vertical-align:middle"></span>';
+      html += '<span style="display:inline-flex;align-items:center;padding:4px 10px;border-radius:999px;font-size:.72rem;font-weight:600;background:#6b4fa00d;border:1px solid #6b4fa018;color:#6b4fa0">'
+        +netDot+escapeHtml(p.name)+'</span>';
+    });
+    html += '</div>';
+
+    // Data artefacts
+    if(da.length){
+      html += '<div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:8px">';
+      da.forEach(function(a){
+        html += '<div style="padding:10px 12px;border-radius:10px;border:1px solid #6b4fa015;background:#6b4fa006">'
+          +'<div style="font-size:.76rem;font-weight:700;margin-bottom:2px">'+escapeHtml(a.name)+'</div>'
+          +'<div style="font-size:.66rem;color:#6b4fa0;text-transform:uppercase;letter-spacing:.06em;margin-bottom:4px">'+escapeHtml(a.kind)+' \u00B7 '+escapeHtml(a.org)+'</div>'
+          +'<div style="font-size:.72rem;color:var(--ink-soft);line-height:1.45">'+escapeHtml(a.desc)+'</div>'
+          +'</div>';
+      });
+      html += '</div>';
+    }
+  }
+  html += '</div>';
+
+  return html;
+}
+
+function renderPlacePane(){
+  renderShedGrid();
+  var container = document.getElementById('place-content');
+  if(!selectedShed){
+    highlightShedOnMap(null);
+    container.innerHTML = '';
+    return;
+  }
+  var shed = SHEDS.find(function(s){return s.key===selectedShed;});
+  highlightShedOnMap(shed);
+  var profile = getPlaceProfile(selectedShed);
+  if(!profile){ container.innerHTML = ''; return; }
+  container.innerHTML = renderPlaceView(profile);
+}
+
+// Shed card clicks
+document.getElementById('place-grid').addEventListener('click',function(e){
+  var card = e.target.closest('.shed-card');
+  if(!card) return;
+  var clicked = card.dataset.shed;
+  selectedShed = (selectedShed===clicked) ? null : clicked;
+  renderPlacePane();
+});
+
+// Go
+renderMarkers();
+renderArtefactPane();
+</script>
+</body>
+</html>
