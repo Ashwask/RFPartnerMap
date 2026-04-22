@@ -381,7 +381,7 @@ body::after{width:24rem;height:24rem;bottom:-10rem;left:-6rem;background:rgba(20
     <div class="control-block">
       <label for="search">Search partners</label>
       <div class="search-wrap">
-        <input class="search-input" id="search" type="search" placeholder="Search by name, city, or keyword" autocomplete="off">
+        <input class="search-input" id="search" type="search" placeholder="Search by place, partner, state, or city" autocomplete="off">
       </div>
     </div>
     <div class="filter-row">
@@ -400,6 +400,7 @@ body::after{width:24rem;height:24rem;bottom:-10rem;left:-6rem;background:rgba(20
           <button class="pill" data-cat="CnR">Conservation</button>
           <button class="pill" data-cat="Buildings">Buildings</button>
           <button class="pill" data-cat="Data">Data</button>
+          <button class="pill" data-cat="Messaging">Messaging</button>
         </div>
       </div>
     </div>
@@ -447,6 +448,7 @@ body::after{width:24rem;height:24rem;bottom:-10rem;left:-6rem;background:rgba(20
       <span class="ip-cat" id="ip-net" style="background:rgba(0,0,0,.06);color:var(--muted)"></span>
       <div class="ip-desc" id="ip-desc"></div>
       <div class="ip-states"><span>Works in: </span><span id="ip-states"></span></div>
+      <div class="ip-states" id="ip-places-wrap" style="margin-top:4px"><span>Landscapes: </span><span id="ip-places"></span></div>
       <div class="ip-actions">
         <button class="secondary-btn" id="ip-open-artefacts" type="button">Open artefacts</button>
       </div>
@@ -537,7 +539,7 @@ body::after{width:24rem;height:24rem;bottom:-10rem;left:-6rem;background:rgba(20
 <script src="artefacts.js?v=20260324d"></script>
 <script src="partners.js?v=20260324d"></script>
 <script>
-var CAT_COL = {Urban:'#16796e', Rural:'#c4921a', CnR:'#1a7847', Buildings:'#c96a28', Data:'#6b4fa0'};
+var CAT_COL = {Urban:'#16796e', Rural:'#c4921a', CnR:'#1a7847', Buildings:'#c96a28', Data:'#6b4fa0', Messaging:'#b5477d'};
 
 // Data lens — partners whose work is significantly data, digital, civic-tech, or knowledge-platform oriented
 var DATA_PARTNERS = [
@@ -551,6 +553,12 @@ var DATA_PARTNERS = [
   'Wetlands International','WASSAN','Shakti Sustainable Energy Foundation','Sustainable Futures Collective',
   'Arthan Foundation','Bharat Design Labs','Socratus','RangDe','Padraka Foundation',
   'Dakshin Foundation','Ecological Restoration Alliance','Transform Rural India Foundation'
+];
+// Messaging lens — partners whose work is significantly narrative, media, journalism, storytelling, or voice platforms
+var MESSAGING_PARTNERS = [
+  'Gramvaani','Narrative Hub / The Climate Narrative Hub','PARI','Slowform Media',
+  'India Development Review','Oorvani Foundation','The Local Food Project (Locavore)',
+  'Sarjapura Curries','Slam Out Loud'
 ];
 var activeCat = 'all';
 var activeQuery = '';
@@ -651,6 +659,18 @@ function popupHtml(p){
     '<div class="pstates">Works in: '+statesText+'</div>';
 }
 
+function shedsForPartner(p){
+  if(typeof SHEDS === 'undefined' || !p || !p.states) return [];
+  var isPan = p.states.indexOf('Pan India') > -1;
+  return SHEDS.filter(function(s){
+    if(isPan) return true;
+    for(var i=0;i<s.states.length;i++){
+      if(p.states.indexOf(s.states[i])>-1) return true;
+    }
+    return false;
+  });
+}
+
 function partnerMatchesQuery(p,query){
   if(!query) return true;
   var haystack = [
@@ -660,7 +680,22 @@ function partnerMatchesQuery(p,query){
     p.desc,
     p.states.join(' ')
   ].join(' ').toLowerCase();
-  return haystack.indexOf(query) > -1;
+  if(haystack.indexOf(query) > -1) return true;
+  // Place (landscape/shed) match — searching "Western Ghats", "Sundarbans" etc.
+  // surfaces partners whose states overlap that shed.
+  if(typeof SHEDS !== 'undefined'){
+    for(var i=0;i<SHEDS.length;i++){
+      var s = SHEDS[i];
+      var lbl = (s.label+' '+s.key).toLowerCase();
+      if(lbl.indexOf(query) > -1){
+        if(p.states.indexOf('Pan India') > -1) return true;
+        for(var j=0;j<s.states.length;j++){
+          if(p.states.indexOf(s.states[j])>-1) return true;
+        }
+      }
+    }
+  }
+  return false;
 }
 
 function getFiltered(){
@@ -668,7 +703,7 @@ function getFiltered(){
   var showRM = document.getElementById('lyr-rm').checked;
   var showEco = document.getElementById('lyr-eco').checked;
   return MAP_PARTNERS.filter(function(p){
-    var categoryOk = activeCat==='all' || p.cat===activeCat || (activeCat==='Data' && DATA_PARTNERS.indexOf(p.name)>-1);
+    var categoryOk = activeCat==='all' || p.cat===activeCat || (activeCat==='Data' && DATA_PARTNERS.indexOf(p.name)>-1) || (activeCat==='Messaging' && MESSAGING_PARTNERS.indexOf(p.name)>-1);
     var stateOk = !activeState || p.states.indexOf(activeState)>-1 || (activeState==='Pan India' && p.states.indexOf('Pan India')>-1);
     var networkOk = (p.rm && showRM) || (!p.rm && showEco);
     return categoryOk && stateOk && networkOk && partnerMatchesQuery(p,query);
@@ -1060,6 +1095,14 @@ function showInfoPanel(p){
   document.getElementById('ip-net').textContent = p.rm ? 'Rainmatter' : 'Ecosystem';
   document.getElementById('ip-desc').textContent = p.desc;
   document.getElementById('ip-states').textContent = p.states.join(', ');
+  var sheds = shedsForPartner(p).map(function(s){return s.label;});
+  var placesWrap = document.getElementById('ip-places-wrap');
+  if(sheds.length){
+    document.getElementById('ip-places').textContent = sheds.join(', ');
+    placesWrap.style.display = '';
+  } else {
+    placesWrap.style.display = 'none';
+  }
   document.getElementById('info-panel').classList.add('show');
 }
 
@@ -1144,12 +1187,18 @@ function renderMarkers(){
     var netDot = p.rm
       ? '<span style="display:inline-block;width:6px;height:6px;border-radius:50%;background:var(--teal);margin-right:3px;vertical-align:middle"></span>'
       : '<span style="display:inline-block;width:6px;height:6px;border-radius:2px;background:var(--orange);margin-right:3px;vertical-align:middle"></span>';
+    var sheds = shedsForPartner(p).map(function(s){return s.label;});
+    var placesLine = sheds.length
+      ? '<div class="sb-states" style="color:var(--muted);margin-top:2px"><span style="font-weight:700;color:var(--ink-soft)">Landscapes: </span>'+escapeHtml(sheds.slice(0,3).join(' • '))+(sheds.length>3?' +'+(sheds.length-3):'')+'</div>'
+      : '';
     return '<div class="sb-item" data-name="'+p.name.replace(/"/g,'&quot;')+'">'
       +'<div class="sb-name">'+p.name+'</div>'
       +'<div class="sb-geo">'+p.geo+'</div>'
       +'<span class="sb-cat" style="background:'+col+'18;color:'+col+'">'+p.cat+'</span>'
       +'<span class="sb-cat" style="background:rgba(0,0,0,.05);color:var(--muted);font-size:.65rem">'+netDot+netLabel+'</span>'
-      +'<div class="sb-states">'+p.states.join(', ')+'</div></div>';
+      +'<div class="sb-states"><span style="font-weight:700;color:var(--ink-soft)">States: </span>'+p.states.join(', ')+'</div>'
+      +placesLine
+      +'</div>';
   }).join('');
 }
 
