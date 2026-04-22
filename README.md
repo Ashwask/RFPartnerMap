@@ -87,4 +87,4 @@ python3 -m http.server 8000
 
 ## License
 
-TBD.
+[Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/) — free to share and adapt, including commercially, with attribution to Rainmatter Foundation. See [`LICENSE`](LICENSE).
