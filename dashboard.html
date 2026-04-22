@@ -379,7 +379,7 @@ body::after{width:24rem;height:24rem;bottom:-10rem;left:-6rem;background:rgba(20
 <div class="controls">
   <div class="controls-main">
     <div class="control-block">
-      <label for="search">Search partners</label>
+      <label for="search">Search</label>
       <div class="search-wrap">
         <input class="search-input" id="search" type="search" placeholder="Search by place, partner, state, or city" autocomplete="off">
       </div>
@@ -554,11 +554,19 @@ var DATA_PARTNERS = [
   'Arthan Foundation','Bharat Design Labs','Socratus','RangDe','Padraka Foundation',
   'Dakshin Foundation','Ecological Restoration Alliance','Transform Rural India Foundation'
 ];
-// Messaging lens — partners whose work is significantly narrative, media, journalism, storytelling, or voice platforms
+// Messaging lens — partners whose primary offering is narrative, media, journalism,
+// storytelling, voice platforms, publishing, cinema, or arts-as-messaging.
 var MESSAGING_PARTNERS = [
-  'Gramvaani','Narrative Hub / The Climate Narrative Hub','PARI','Slowform Media',
-  'India Development Review','Oorvani Foundation','The Local Food Project (Locavore)',
-  'Sarjapura Curries','Slam Out Loud'
+  'ALT EFF',                                    // climate cinema
+  'Gramvaani',                                  // participatory media + voice-tech
+  'India Development Review',                   // publishing platform
+  'Narrative Hub / The Climate Narrative Hub',  // climate storytelling / narrative change
+  'Oorvani Foundation',                         // civic-information publishing (Citizen Matters)
+  'PARI',                                       // rural journalism archive
+  'Slam Out Loud',                              // arts-based education
+  'Slowform Media',                             // climate/environment journalism
+  'The Local Food Project (Locavore)',          // food-systems storytelling
+  'Sarjapura Curries'                           // community storytelling (regional food)
 ];
 var activeCat = 'all';
 var activeQuery = '';
