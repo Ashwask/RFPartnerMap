@@ -87,4 +87,4 @@ python3 -m http.server 8000
 
 ## License
 
-[Creative Commons Attribution 4.0 International (CC BY 4.0)](https://creativecommons.org/licenses/by/4.0/) — free to share and adapt, including commercially, with attribution to Rainmatter Foundation. See [`LICENSE`](LICENSE).
+[Creative Commons Attribution-NonCommercial 4.0 International (CC BY-NC 4.0)](https://creativecommons.org/licenses/by-nc/4.0/) — free to share and adapt for non-commercial purposes, with attribution to Rainmatter Foundation. See [`LICENSE`](LICENSE).
