@@ -381,7 +381,7 @@ body::after{width:24rem;height:24rem;bottom:-10rem;left:-6rem;background:rgba(20
     <div class="control-block">
       <label for="search">Search</label>
       <div class="search-wrap">
-        <input class="search-input" id="search" type="search" placeholder="Search by place, partner, state, or city" autocomplete="off">
+        <input class="search-input" id="search" type="search" placeholder="Search any keyword — partner, place, state, city, artefact, theme" autocomplete="off">
       </div>
     </div>
     <div class="filter-row">
@@ -679,31 +679,58 @@ function shedsForPartner(p){
   });
 }
 
-function partnerMatchesQuery(p,query){
-  if(!query) return true;
-  var haystack = [
-    p.name,
-    p.geo,
-    p.cat,
-    p.desc,
-    p.states.join(' ')
-  ].join(' ').toLowerCase();
-  if(haystack.indexOf(query) > -1) return true;
-  // Place (landscape/shed) match — searching "Western Ghats", "Sundarbans" etc.
-  // surfaces partners whose states overlap that shed.
-  if(typeof SHEDS !== 'undefined'){
-    for(var i=0;i<SHEDS.length;i++){
-      var s = SHEDS[i];
-      var lbl = (s.label+' '+s.key).toLowerCase();
-      if(lbl.indexOf(query) > -1){
-        if(p.states.indexOf('Pan India') > -1) return true;
-        for(var j=0;j<s.states.length;j++){
-          if(p.states.indexOf(s.states[j])>-1) return true;
-        }
-      }
+var _partnerHaystackCache = {};
+
+function buildPartnerHaystack(p){
+  if(_partnerHaystackCache[p.name]) return _partnerHaystackCache[p.name];
+  var parts = [
+    p.name, p.geo, p.cat, p.desc,
+    p.states.join(' '),
+    p.rm ? 'Rainmatter' : 'Ecosystem'
+  ];
+  if(typeof DATA_PARTNERS !== 'undefined' && DATA_PARTNERS.indexOf(p.name) > -1) parts.push('Data');
+  if(typeof MESSAGING_PARTNERS !== 'undefined' && MESSAGING_PARTNERS.indexOf(p.name) > -1) parts.push('Messaging');
+  if(typeof ORG_ARTEFACT_OVERRIDES !== 'undefined'){
+    var canonical = (typeof ORG_ARTEFACT_ALIASES !== 'undefined' && ORG_ARTEFACT_ALIASES[p.name]) || p.name;
+    var override = ORG_ARTEFACT_OVERRIDES[canonical];
+    if(override){
+      if(override.summary) parts.push(override.summary);
+      var pushItems = function(arr){
+        (arr||[]).forEach(function(it){
+          if(it.name) parts.push(it.name);
+          if(it.kind) parts.push(it.kind);
+          if(it.desc) parts.push(it.desc);
+        });
+      };
+      pushItems(override.tangible);
+      pushItems(override.intangible);
+      (override.sources||[]).forEach(function(s){ if(s.label) parts.push(s.label); });
     }
   }
-  return false;
+  shedsForPartner(p).forEach(function(s){
+    parts.push(s.label||'');
+    parts.push(s.key||'');
+    parts.push(s.context||'');
+    parts.push((s.needs||[]).join(' '));
+    parts.push((s.risks||[]).join(' '));
+    parts.push((s.counters||[]).join(' '));
+    parts.push((s.fills||[]).join(' '));
+    (s.health||[]).forEach(function(h){ parts.push((h.metric||'')+' '+(h.fact||'')); });
+  });
+  var h = parts.join(' ').toLowerCase();
+  _partnerHaystackCache[p.name] = h;
+  return h;
+}
+
+function partnerMatchesQuery(p,query){
+  if(!query) return true;
+  var hay = buildPartnerHaystack(p);
+  var tokens = query.split(/\s+/);
+  for(var i=0;i<tokens.length;i++){
+    var t = tokens[i];
+    if(t && hay.indexOf(t) < 0) return false;
+  }
+  return true;
 }
 
 function getFiltered(){
