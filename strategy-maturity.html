@@ -1,0 +1,1852 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Strategy Maturity · Rainmatter Foundation</title>
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --accent: #8B1A1A;
+    --accent-bg: #fdf0f0;
+    --accent-border: #f0d0d0;
+  }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Inter', sans-serif;
+    background: #f7f6f4;
+    color: #1a1a1a;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  /* ── Header ── */
+  header {
+    background: #fff;
+    border-bottom: 2.5px solid var(--accent);
+    padding: 9px 24px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-shrink: 0;
+    transition: border-color 0.3s;
+  }
+
+  .header-left { display: flex; align-items: center; gap: 16px; }
+
+  .org-label {
+    font-size: 9.5px;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    font-weight: 700;
+    transition: color 0.3s;
+  }
+
+  .thesis-select-wrap {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .thesis-select-label {
+    font-size: 11px;
+    color: #aaa;
+    font-weight: 500;
+  }
+
+  #thesis-select {
+    font-size: 14px;
+    font-weight: 700;
+    color: #1a1a1a;
+    background: transparent;
+    border: none;
+    border-bottom: 2px solid var(--accent);
+    padding: 2px 20px 2px 4px;
+    cursor: pointer;
+    appearance: none;
+    -webkit-appearance: none;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='6'%3E%3Cpath d='M0 0l5 6 5-6z' fill='%23aaa'/%3E%3C/svg%3E");
+    background-repeat: no-repeat;
+    background-position: right 2px center;
+    font-family: inherit;
+    transition: border-color 0.3s;
+  }
+
+  #thesis-select:focus { outline: none; }
+
+  .header-hint {
+    font-size: 11px;
+    color: #bbb;
+    letter-spacing: 0.2px;
+  }
+
+  /* ── Layout ── */
+  .main {
+    flex: 1;
+    display: flex;
+    overflow: hidden;
+    min-height: 0;
+  }
+
+  /* ── Matrix Panel ── */
+  .matrix-panel {
+    flex: 0 0 62%;
+    display: flex;
+    flex-direction: column;
+    padding: 14px 10px 10px 18px;
+    min-height: 0;
+  }
+
+  .panel-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.6px;
+    color: #bbb;
+    margin-bottom: 6px;
+  }
+
+  #matrix-svg {
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+    display: block;
+    cursor: default;
+    user-select: none;
+    -webkit-user-select: none;
+  }
+
+  /* ── Detail Panel ── */
+  .detail-panel {
+    flex: 0 0 38%;
+    background: #fff;
+    border-left: 1px solid #e8e8e8;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+  }
+
+  .detail-header {
+    padding: 16px 20px 12px;
+    border-bottom: 1px solid #f2f2f2;
+    flex-shrink: 0;
+  }
+
+  .detail-strategy-name {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--accent);
+    line-height: 1.25;
+    margin-bottom: 2px;
+    transition: color 0.3s;
+  }
+
+  .detail-strategy-sub {
+    font-size: 11.5px;
+    color: #aaa;
+    margin-bottom: 10px;
+  }
+
+  .detail-position { display: flex; flex-wrap: wrap; gap: 5px; }
+
+  .position-tag {
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    color: var(--accent);
+    font-size: 10px;
+    font-weight: 600;
+    padding: 3px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.4px;
+    transition: background 0.3s, color 0.3s, border-color 0.3s;
+  }
+
+  .priority-tag {
+    background: #f5f5f5;
+    border: 1px solid #e0e0e0;
+    color: #888;
+    font-size: 10px;
+    font-weight: 700;
+    padding: 3px 9px;
+    border-radius: 20px;
+    letter-spacing: 0.4px;
+  }
+
+  .priority-tag.p0 { background: #fff3e0; border-color: #ffe0b2; color: #e65100; }
+  .priority-tag.p1 { background: #e8f5e9; border-color: #c8e6c9; color: #2e7d32; }
+
+  .detail-body { flex: 1; overflow-y: auto; padding: 14px 20px; }
+  .detail-body::-webkit-scrollbar { width: 3px; }
+  .detail-body::-webkit-scrollbar-track { background: transparent; }
+  .detail-body::-webkit-scrollbar-thumb { background: #e4e4e4; border-radius: 2px; }
+
+  .detail-section { margin-bottom: 16px; }
+
+  .section-title {
+    font-size: 9px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.8px;
+    color: #ccc;
+    margin-bottom: 8px;
+    padding-bottom: 5px;
+    border-bottom: 1px solid #f5f5f5;
+  }
+
+  .shift-row {
+    display: flex;
+    gap: 8px;
+    font-size: 12.5px;
+    color: #333;
+    line-height: 1.55;
+    margin-bottom: 7px;
+    align-items: flex-start;
+  }
+
+  .shift-arrow {
+    color: var(--accent);
+    font-weight: 700;
+    flex-shrink: 0;
+    font-size: 13px;
+    margin-top: 1px;
+    transition: color 0.3s;
+  }
+
+  .bullet-row {
+    font-size: 12.5px;
+    color: #444;
+    line-height: 1.55;
+    margin-bottom: 5px;
+    padding-left: 14px;
+    position: relative;
+  }
+
+  .bullet-row::before {
+    content: '·';
+    position: absolute;
+    left: 2px;
+    color: #ccc;
+    font-size: 18px;
+    line-height: 1.1;
+  }
+
+  .bullet-row.plan::before { color: var(--accent); transition: color 0.3s; }
+
+  .pipeline-wrap { display: flex; flex-wrap: wrap; gap: 5px; }
+
+  .pipeline-chip {
+    background: #f7f7f7;
+    border: 1px solid #ebebeb;
+    color: #555;
+    font-size: 10.5px;
+    padding: 3px 9px;
+    border-radius: 4px;
+  }
+
+  .roles-wrap { display: flex; flex-wrap: wrap; gap: 6px; }
+
+  .role-chip {
+    background: #1a1a1a;
+    color: #fff;
+    font-size: 10.5px;
+    font-weight: 500;
+    padding: 4px 11px;
+    border-radius: 20px;
+  }
+
+  /* ── Empty state ── */
+  .empty-state {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 24px;
+    text-align: center;
+  }
+
+  .empty-ring {
+    width: 38px; height: 38px;
+    border: 2px solid #eee;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px; color: #ddd;
+    margin-bottom: 4px;
+  }
+
+  .empty-text { font-size: 12px; color: #ccc; line-height: 1.5; }
+
+  /* ── Thesis legend (All Theses mode, in detail panel) ── */
+  .thesis-legend {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    padding: 22px 24px;
+    gap: 10px;
+    overflow-y: auto;
+  }
+  .thesis-legend-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.6px;
+    color: #888;
+    margin-bottom: 6px;
+  }
+  .thesis-legend-group {
+    border: 1px solid #ececec;
+    border-radius: 4px;
+    background: #fff;
+    overflow: hidden;
+  }
+  .thesis-legend-row {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 9px 12px;
+    background: #fafafa;
+    cursor: pointer;
+    transition: background 0.15s;
+    border-bottom: 1px solid #ececec;
+  }
+  .thesis-legend-row:hover {
+    background: #f0f0f0;
+  }
+  .thesis-legend-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    flex-shrink: 0;
+  }
+  .thesis-legend-name {
+    font-size: 12.5px;
+    font-weight: 700;
+    color: #1a1a1a;
+    letter-spacing: 0.1px;
+  }
+  .thesis-legend-count {
+    margin-left: auto;
+    font-size: 10.5px;
+    color: #888;
+    font-weight: 500;
+  }
+  .thesis-legend-strategies {
+    padding: 4px 0;
+  }
+  .thesis-legend-strategy {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+    padding: 6px 12px 6px 22px;
+    font-size: 11.5px;
+    color: #444;
+    transition: background 0.12s, color 0.12s;
+    line-height: 1.35;
+    border-left: 2px solid transparent;
+  }
+  .thesis-legend-strategy.is-clickable {
+    cursor: pointer;
+  }
+  .thesis-legend-strategy.is-clickable:hover {
+    background: #fafafa;
+    color: #1a1a1a;
+    border-left-color: var(--strategy-accent, #ccc);
+  }
+  .thesis-legend-strategy.is-emergent {
+    color: #999;
+    cursor: default;
+  }
+  .thesis-legend-strategy .strat-bullet {
+    color: #ccc;
+    font-size: 9px;
+    flex-shrink: 0;
+  }
+  .thesis-legend-strategy .strat-id {
+    font-size: 9.5px;
+    font-weight: 700;
+    color: var(--strategy-accent, #888);
+    background: #f3f3f3;
+    border: 1px solid #e6e6e6;
+    width: 16px;
+    height: 16px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+  .thesis-legend-strategy.is-emergent .strat-id {
+    color: #bbb;
+    background: #fafafa;
+  }
+  .thesis-legend-strategy .strat-name {
+    flex: 1;
+    font-weight: 500;
+  }
+  .thesis-legend-strategy.is-emergent .strat-name {
+    font-style: italic;
+  }
+  .thesis-legend-strategy .strat-priority {
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    color: #aaa;
+    flex-shrink: 0;
+  }
+  .thesis-legend-strategy .strat-status {
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.6px;
+    margin-left: auto;
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-weight: 700;
+  }
+  .thesis-legend-strategy:not(.is-emergent) .strat-status {
+    color: var(--strategy-accent);
+    background: #fff;
+    border: 1px solid #eee;
+  }
+  .thesis-legend-strategy.is-emergent .strat-status {
+    color: #bbb;
+    background: transparent;
+    border: 1px dashed #e6e6e6;
+  }
+  .thesis-legend-themes {
+    padding: 6px 12px 8px 22px;
+    font-size: 10.5px;
+    color: #999;
+    line-height: 1.4;
+    font-style: italic;
+  }
+  .thesis-legend-hint {
+    font-size: 10.5px;
+    color: #aaa;
+    line-height: 1.5;
+    margin-top: 6px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+  }
+
+  /* ── Panel sublabel (thesis-aware caption under panel-label) ── */
+  .panel-sublabel {
+    font-size: 10.5px;
+    color: #888;
+    line-height: 1.45;
+    margin: -2px 0 6px 0;
+    letter-spacing: 0.2px;
+  }
+  .panel-sublabel .topshift {
+    color: #555;
+    font-weight: 500;
+  }
+  .panel-sublabel .poesi-badge {
+    display: inline-block;
+    padding: 1px 6px;
+    border-radius: 3px;
+    font-size: 9.5px;
+    font-weight: 700;
+    letter-spacing: 0.5px;
+    margin-right: 6px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    border: 1px solid var(--accent-border);
+  }
+  .panel-sublabel .poesi-item {
+    margin-right: 10px;
+    font-weight: 500;
+  }
+  .panel-sublabel .poesi-item.active   { color: var(--accent); font-weight: 700; }
+  .panel-sublabel .poesi-item.emergent { color: #aaa; font-style: italic; }
+
+  /* ── Framework card (in detail panel when no strategy clicked) ── */
+  .framework-card {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    padding: 22px 24px;
+    overflow-y: auto;
+  }
+  .framework-card .fc-label {
+    font-size: 9.5px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.6px;
+    color: var(--accent);
+  }
+  .framework-card .fc-shift {
+    font-size: 13px;
+    line-height: 1.5;
+    color: #1a1a1a;
+    font-weight: 500;
+    padding: 12px 14px;
+    background: var(--accent-bg);
+    border-left: 3px solid var(--accent);
+    border-radius: 3px;
+  }
+  .framework-card .fc-strategy {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 9px 12px;
+    border: 1px solid #ececec;
+    border-radius: 4px;
+    background: #fff;
+  }
+  .framework-card .fc-strategy.active {
+    border-color: var(--accent-border);
+    background: var(--accent-bg);
+  }
+  .framework-card .fc-strategy.emergent {
+    background: #fafafa;
+    border-style: dashed;
+  }
+  .framework-card .fc-strategy-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+  }
+  .framework-card .fc-id {
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--accent);
+    background: var(--accent-bg);
+    border: 1px solid var(--accent-border);
+    width: 18px;
+    height: 18px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 3px;
+    flex-shrink: 0;
+  }
+  .framework-card .fc-strategy.emergent .fc-id {
+    color: #999;
+    background: #f3f3f3;
+    border-color: #e0e0e0;
+  }
+  .framework-card .fc-name {
+    font-size: 12.5px;
+    font-weight: 600;
+    color: #1a1a1a;
+  }
+  .framework-card .fc-strategy.emergent .fc-name { color: #888; }
+  .framework-card .fc-status {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.7px;
+    margin-left: auto;
+    padding: 2px 7px;
+    border-radius: 3px;
+    font-weight: 700;
+  }
+  .framework-card .fc-strategy.active .fc-status {
+    color: var(--accent);
+    background: #fff;
+    border: 1px solid var(--accent-border);
+  }
+  .framework-card .fc-strategy.emergent .fc-status {
+    color: #aaa;
+    background: transparent;
+    border: 1px dashed #ddd;
+  }
+  .framework-card .fc-note {
+    font-size: 10.5px;
+    color: #888;
+    line-height: 1.4;
+    padding-left: 26px;
+  }
+  .framework-card .fc-hint {
+    font-size: 10.5px;
+    color: #aaa;
+    text-align: center;
+    margin-top: 4px;
+    padding-top: 12px;
+    border-top: 1px solid #eee;
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="header-left">
+    <span class="org-label">Rainmatter Foundation</span>
+    <div class="thesis-select-wrap">
+      <span class="thesis-select-label">Thesis:</span>
+      <select id="thesis-select">
+        <option value="All Theses" selected>All Theses</option>
+        <option value="Data Thesis">Data Thesis</option>
+        <option value="Rural Thesis">Rural Thesis</option>
+        <option value="Messaging Thesis">Messaging Thesis</option>
+        <option value="Urban Thesis">Urban Thesis</option>
+      </select>
+    </div>
+  </div>
+  <span class="header-hint">Drag boxes to reposition · Click to explore</span>
+</header>
+
+<div class="main">
+  <div class="matrix-panel">
+    <div class="panel-label">Strategy Maturity Matrix</div>
+    <div class="panel-sublabel" id="panel-sublabel" style="display:none"></div>
+    <svg id="matrix-svg"></svg>
+  </div>
+
+  <div class="detail-panel">
+    <div class="empty-state" id="empty-state">
+      <div class="empty-ring">↗</div>
+      <div class="empty-text">Click any strategy box<br>to explore shifts, updates &amp; plans</div>
+    </div>
+    <div class="framework-card" id="framework-card" style="display:none"></div>
+    <div class="thesis-legend" id="thesis-legend" style="display:none"></div>
+    <div id="detail-header-wrap" style="display:none">
+      <div class="detail-header">
+        <div class="detail-strategy-name" id="d-name"></div>
+        <div class="detail-strategy-sub" id="d-sub"></div>
+        <div class="detail-position" id="d-pos"></div>
+      </div>
+      <div class="detail-body" id="d-body"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════════════
+//  THESES CONFIG  —  add / edit thesis data here
+//  Each thesis: { accent, roles, xAxis, yAxis, strategies[] }
+//  Strategy: { id, name, subtitle, priority, x, y, color, shifts[], updates[], plans[], pipeline[] }
+// ══════════════════════════════════════════════════════════════════════
+
+const THESES = {
+
+  // ── DATA THESIS ─────────────────────────────────────────────────────
+  "Data Thesis": {
+    accent: "#8B1A1A",
+    accentBg: "#fdf0f0",
+    accentBorder: "#f0d0d0",
+    roles: ["Anchor", "Orchestrator", "Solution provider", "Enabler"],
+    xAxis: {
+      label: "Strategy Maturity →",
+      stages: [
+        "Who is driving\nthe strategy",
+        "Framework of\napproach",
+        "Adoption / Beta\ntest of framework",
+        "Usage\noutside",
+        "Formal\nStructures"
+      ]
+    },
+    yAxis: {
+      label: "Who Drives",
+      levels: ["RF driven", "RF enabled", "Partner led", "Ecosystem Belief"]
+    },
+    strategies: [
+      {
+        id: "dt-s1",
+        name: "Data to Value",
+        subtitle: "Drive Outcomes",
+        priority: "P2",
+        x: 1.1, y: 0.25,
+        color: "#6B1D1D",
+        shifts: [
+          "Siloed datasets → to interoperable systems",
+          "Insights from a carbon-only lens → to place-based intelligence"
+        ],
+        updates: [
+          "Modelling on SoTH Data starting",
+          "Projection/prediction modelling for ecosystem advisory in progress"
+        ],
+        plans: [
+          "Restoration/Ecology field tests",
+          "Interoperability via Tarkam",
+          "Data commons thinking (Sathya / Ashwin)",
+          "Listening trials: GramVaani / Apurva AI",
+          "Identify marginal change opportunities with NbS projects for Adaptations work"
+        ],
+        pipeline: ["SoTH Alliance", "Tarkam", "GramVaani", "Apurva AI"]
+      },
+      {
+        id: "dt-s2",
+        name: "Enable Tools\nDrive Usage",
+        subtitle: "NRM: CoRE Stack",
+        priority: "P1",
+        x: 2.3, y: 1.3,
+        color: "#922B21",
+        shifts: [
+          "Top down decisions → to actionable",
+          "Data availability → to usability via tools"
+        ],
+        updates: [
+          "Cadre-led adoption + last-mile usage emerging",
+          "80+ Projects submitted via CoREStack",
+          "Integrated stacks (NCF, Keystone, TGC)",
+          "Translation/interoperability layer forming (CoRE Stack, Biodev, Reap Benefit / Samaj Data, Tarkam)"
+        ],
+        plans: [
+          "NRM CoRE Stack — Push replication with PRADAN; clear GTM bottlenecks",
+          "Internal Inventory — Publish stack internally; surface via CRA",
+          "Agroecology Workshop — APCNF collaboration to feed into place thesis"
+        ],
+        pipeline: ["NCF", "Keystone", "TGC", "PRADAN", "CRA", "Tarkam"]
+      },
+      {
+        id: "dt-s3",
+        name: "Understanding\nthe Place",
+        subtitle: "Wide lens",
+        priority: "P1",
+        x: 2.75, y: 2.4,
+        color: "#5D4037",
+        shifts: [
+          "Fragmented views → Decision-grade, place-based intelligence",
+          "Siloed datasets → to interoperable systems"
+        ],
+        updates: [
+          "CoRE Stack (KYL): tehsil-level granularity",
+          "IOLN: standardized LULC layers across India",
+          "Integrated Govt/open data tools: roads, waste, public spending",
+          "Cost + time to build tools has collapsed",
+          "Strong adoption in accountability",
+          "Translation/interoperability layer forming"
+        ],
+        plans: [
+          "Baseline existing platforms & usage gaps in rural/ecology domain (FES)",
+          "Gather urban systems requirements (Wide & Narrow) based on NoTF",
+          "Google/DeepMind integrations on open products like WeatherNext"
+        ],
+        pipeline: ["FES", "WeatherNext", "Google", "DeepMind"]
+      }
+    ]
+  },
+
+  // ── RURAL THESIS ─────────────────────────────────────────────────────
+  "Rural Thesis": {
+    accent: "#1B4332",
+    accentBg: "#f0f7f4",
+    accentBorder: "#c3e6d4",
+    roles: ["Anchor", "Orchestrator", "Solution provider", "Enabler"],
+    xAxis: {
+      label: "Strategy Maturity →",
+      // Maps to: Framework clarity → Replicability → Usability → Institutionalisation
+      stages: [
+        "Who is driving\nthe strategy",
+        "Framework of\napproach",
+        "Adoption / Beta\ntest of framework",
+        "Usage\noutside",
+        "Formal\nStructures"
+      ]
+    },
+    yAxis: {
+      label: "Who Drives",
+      levels: ["RF driven", "RF enabled", "Partner led", "Ecosystem Belief"]
+    },
+    strategies: [
+      {
+        id: "ru-s1",
+        name: "Place\nOwnership",
+        subtitle: "1.1 — Framework & SOPs for CSOs",
+        priority: "P0",
+        x: 1.35, y: 0.08,
+        color: "#1B4332",
+        shifts: [
+          "Fragmented CSO approaches → Common place-ownership framework & SOPs",
+          "Passive community presence → Active, facilitated place ownership"
+        ],
+        updates: [
+          "SOTH Alliance: creating common tools and SOPs — common frameworks for adoption",
+          "Productising methods — Brochure and user manual collaterals underway",
+          "Working closely with individual orgs: Identifying, Engaging, Demo, Adoption, Feedback",
+          "Basket of Needs: Moving from GramEEE consortium — livelihood as entry, ownership as catalyst"
+        ],
+        plans: [
+          "Collaterals going to customer — deploy brochure and user manual",
+          "Strengthen customer understanding via feedback loops",
+          "Feedback informing product change — updation of collaterals",
+          "Identify orgs aligned on ownership/collectivisation/agency/place (e.g. Paani, Phygital)"
+        ],
+        pipeline: ["SOTH Alliance", "Buzz Women", "Gram Vikas", "HUM", "PRADAN", "TRIF", "Vaagdhara", "Goonj", "PAANI", "Timbaktu", "CRA", "GramEEE"]
+      },
+      {
+        id: "ru-s2",
+        name: "Ownership\nNarrative",
+        subtitle: "1.2 — Build narrative around place-based ownership",
+        priority: "P1",
+        x: 0.38, y: 0.48,
+        color: "#2D6A4F",
+        shifts: [
+          "Invisible practice → Widely recognised place-based ownership narrative",
+          "Internal knowledge → Stories reaching funders, CSOs, and communities"
+        ],
+        updates: [
+          "Chalking out target audiences: Funders, place owners, CSOs as enablers",
+          "Roadmap and plan of action in progress (audience, mediums, frequency)",
+          "Looking for service providers to build narratives and op-ed strategy",
+          "Via SOTH and CRA — working with Narrative Hub (NH)"
+        ],
+        plans: [
+          "Finalise roadmap: audience segments, mediums, frequency",
+          "Identify and onboard SPs for narrative strategy and op-eds",
+          "Activate Narrative Hub with CRA partnership",
+          "Look out for new narrative partners"
+        ],
+        pipeline: ["Narrative Hub", "CRA"]
+      },
+      {
+        id: "ru-s3",
+        name: "Ownership\nFunders",
+        subtitle: "1.3 — Align financiers to fund ownership deployment",
+        priority: "P1",
+        x: 0.22, y: 0.82,
+        color: "#40916C",
+        shifts: [
+          "Project-based philanthropy → Place-based ownership investment",
+          "Unaligned financiers → Funders backing community ownership journeys"
+        ],
+        updates: [
+          "Engaging with CSRs and Philanthropies — conversations around place-based funding",
+          "Supporting Solution Stack like GRE and IG in funder pitches"
+        ],
+        plans: [
+          "Deepen conversations with Dasra, Rebuild, Shakti, Grow+",
+          "Explore Reliance Foundation, Rockefeller, Heifer, McCormick, Shell Foundation",
+          "Align funders on ownership/contextualization for target regions"
+        ],
+        pipeline: ["Dasra", "Rebuild", "Shakti", "Grow+", "Reliance Foundation", "Rockefeller", "HUL Foundation", "ABF", "Oak", "McCormick", "Shell Foundation"]
+      },
+      {
+        id: "ru-s4",
+        name: "Entrepreneurship\nPlatform",
+        subtitle: "2.1 — Platformization & Servicification",
+        priority: "P1",
+        x: 3.4, y: 0.35,
+        color: "#1A3A5C",
+        shifts: [
+          "Fragmented, invisible solutions → Discoverable, collaborative platform",
+          "Disconnected demand signals → Curated needs linked to right solutions"
+        ],
+        updates: [
+          "Focus on collaboration to increase visibility and classify solutions",
+          "No current interest in funding — building ecosystem visibility first",
+          "Supply side: Multiple platforms enabled; GRE as discoverable knowledge base",
+          "Demand side: Curating vague demands to connect ground needs to solutions"
+        ],
+        plans: [
+          "Track each product across 6Ms — geography and service-provider layers",
+          "Nudge for collaboration and classification of offerings",
+          "Secure funding ecosystem to plug deployment bottlenecks",
+          "Deepen links with GRE, Vikalp Sangam, EkStep Blue Dots"
+        ],
+        pipeline: ["Vikalp Sangam", "GramEEE", "GRE", "EkStep Blue Dots", "Honeybee Network", "SELCO", "CEEW", "NitiAayog", "MORD", "Gram Vikas"]
+      },
+      {
+        id: "ru-s5",
+        name: "Agroecology\nPlatform",
+        subtitle: "2.2 — Platformization & Servicification",
+        priority: "P2",
+        x: 0.50, y: 1.20,
+        color: "#5C6B1A",
+        shifts: [
+          "Conventional agriculture push → Agroecological platform ecosystem",
+          "Individual org methods → Assembled, replicable SOPs and canvases"
+        ],
+        updates: [
+          "CSA (Venky) became ecosystem incubation partner — focusing on agriculture platform",
+          "Bringing in for-profit players and startups (agripruners)",
+          "Building ecosystem aligned with existing agroecology canvas"
+        ],
+        plans: [
+          "Canvas development — step 0",
+          "Find an anchor org / work with individual orgs",
+          "Assemble and curate existing methods and SOPs"
+        ],
+        pipeline: ["CSA", "RRAN", "NCNF", "Venky", "CEEW", "Grameen Foundation", "Digital Green", "WASSAN", "BAF Agroecology Fund", "Ruchit Garg / FPOs"]
+      },
+      {
+        id: "ru-s6",
+        name: "NRM",
+        subtitle: "2.3 — Natural Resource Management Platform",
+        priority: "P3",
+        x: 0.75, y: 0.62,
+        color: "#6B6B1A",
+        shifts: [
+          "Siloed NRM approaches → Integrated platform with shared canvas",
+          "Sector-specific work → Cross-linked biodiversity, livelihoods & health"
+        ],
+        updates: [
+          "Strategy: bring NRM practitioners together to create canvases and lead",
+          "Biodiversity focus: looking for partners connecting biodiversity to livelihoods, health, construction",
+          "Emphasis on linkage aspect across domains"
+        ],
+        plans: [
+          "Canvas development — step 0",
+          "Find an anchor org in NRM space",
+          "Assemble and curate methods and SOPs",
+          "Identify biodiversity linkage partners"
+        ],
+        pipeline: ["WASSAN"]
+      },
+      {
+        id: "ru-s7",
+        name: "Ecosystem\nIncubation",
+        subtitle: "3 — Alternatives to extractive mainstream",
+        priority: "P3",
+        x: 0.45, y: 0.92,
+        color: "#5C3317",
+        shifts: [
+          "Extractive mainstream models → Regenerative ecosystem alternatives",
+          "Paused fragmented efforts → Organic ecosystem growth from ground-up stories"
+        ],
+        updates: [
+          "Earlier efforts to build ecosystems are paused",
+          "Focus shifted: connecting on-ground needs with solution providers",
+          "Allowing balance system to build organically around emerging stories and successful providers"
+        ],
+        plans: [
+          "Connect on-ground needs with solution providers",
+          "Allow organic ecosystem growth from successful provider stories",
+          "Common Grounds as a key convening platform"
+        ],
+        pipeline: ["Common Grounds"]
+      }
+    ]
+  }
+
+  ,
+
+  // ── MESSAGING THESIS ─────────────────────────────────────────────────
+  "Messaging Thesis": {
+    accent: "#7D4E00",
+    accentBg: "#fdf5e8",
+    accentBorder: "#f5d9a8",
+    roles: ["Anchor", "Orchestrator", "Solution provider", "Enabler"],
+    xAxis: {
+      label: "Strategy Maturity →",
+      stages: [
+        "Who is driving\nthe strategy",
+        "Framework of\napproach",
+        "Adoption / Beta\ntest of framework",
+        "Usage\noutside",
+        "Formal\nStructures"
+      ]
+    },
+    yAxis: {
+      label: "Who Drives",
+      levels: ["RF driven", "RF enabled", "Partner led", "Ecosystem Belief"]
+    },
+    strategies: [
+      {
+        id: "msg-s1",
+        name: "Diverse &\nEffective Narrative",
+        subtitle: "Voices · Formats · Themes",
+        priority: "P0",
+        x: 0.75, y: 1.0,
+        color: "#7D4E00",
+        shifts: [
+          "Homogeneous climate messaging → Diverse voices, formats & themes across regions",
+          "Carbon-only focus → Place-based, lived-experience stories"
+        ],
+        updates: [
+          "SHIFT transport (WRI) — Ahmedabad convening: local ownership model, playbook exists, BKC conversation active",
+          "Jagah fellowship — 1st cohort of 20 launched, 4 places done, Penguin interested in a book on stories",
+          "Narrative Hub — Influencer engagement model working; demand from Ahmedabad SHIFT and HWI",
+          "Quality of Life jam with Swarathma — pilot underway; potential playbook for co-creation with orgs and creators",
+          "Sustaina by CEEW (food systems + art), Swarathma climate jams in colleges, Asar's simplifying science series"
+        ],
+        plans: [
+          "Work with existing partners to build frameworks / playbooks — test for demand, usability, replicability",
+          "Small grants program — different approach to bring in diversity and set stage for explosion",
+          "Define what 'narratives' means and how we measure narrative shifts",
+          "Start working with each thesis on their narrative strategy"
+        ],
+        pipeline: ["WRI / SHIFT", "Jagah Fellowship", "Narrative Hub", "Swarathma", "CEEW", "Asar", "Civic Studios", "Mongabay", "CSBC (Ashoka)"]
+      },
+      {
+        id: "msg-s2",
+        name: "Distribution &\nEngagement",
+        subtitle: "Channels · Amplification · Mainstreaming",
+        priority: "P0",
+        x: 1.85, y: 2.0,
+        color: "#5C3A00",
+        shifts: [
+          "Fragmented channels → Distributed node network driving amplification at scale",
+          "Climate content in climate spaces → Subliminal messaging in mainstream culture"
+        ],
+        updates: [
+          "Narrative Hub: engagement model with partners clarifying; media analysis of Middle East war ongoing",
+          "Asar: media and creator network — strength in artists and media in select states",
+          "CEEW rooftop solar: great ad with Piyush Mishra, getting feature in OTT series Gullak!",
+          "Building distributed node network — figuring how Asar, CT and CNH work together; first instance on Heat",
+          "Mainstream media already picking up: Indian Express Climate page, growing topic coverage",
+          "Very mainstream interest emerging: Netflix screenwriting lab, Bollywood × Civic Studios"
+        ],
+        plans: [
+          "Build out map of how CT, CNH and Asar work with each other — identify remaining gaps",
+          "Nudge towards frameworks / playbooks that can replicate at 100x scale",
+          "Ensure very mainstream interest (Netflix, Bollywood) doesn't lose nuance"
+        ],
+        pipeline: ["Climate Trends", "Green Stories", "Purpose / Hands of Transition", "CNH", "Asar", "Netflix", "Civic Studios", "India Green Set / Anupama"]
+      },
+      {
+        id: "msg-s3",
+        name: "Sensing &\nListening",
+        subtitle: "Sentiment · Insights · Narrative tracking",
+        priority: "P1",
+        x: 0.30, y: 0.20,
+        color: "#4A3000",
+        shifts: [
+          "Reactive messaging → Data-informed, evidence-backed narrative strategy",
+          "Ecosystem operating blind → Shared insights on public perception and media coverage"
+        ],
+        updates: [
+          "Narrative Hub: sensing on current energy crisis",
+          "Hands of Transition + CEEW SFS: sensing on natural farming",
+          "Voice Report by Socratus published",
+          "SHIFT planning a sentiment survey on mobility",
+          "Space fragmented — no anchor has picked this up yet despite nudges"
+        ],
+        plans: [
+          "Map current work, players, activity — visibility of what exists and what to build on",
+          "Keep looking for an anchor who can start leading this piece",
+          "Target: at least 1–2 artefacts emerging and tested for usability"
+        ],
+        pipeline: ["Youth Ki Awaaz", "Ek Kutumb", "Socratus", "Narrative Hub", "Hands of Transition"]
+      },
+      {
+        id: "msg-s4",
+        name: "Storytelling\nCapacity",
+        subtitle: "Trainers · Fellows · Journalists",
+        priority: "P2",
+        x: 3.55, y: 2.05,
+        color: "#8B6914",
+        shifts: [
+          "Niche storytelling skill → Embedded capacity in every grassroots climate org",
+          "Isolated creators → Networked storytellers with shared platforms and playbooks"
+        ],
+        updates: [
+          "Narrative Hub: training sessions running (Data viz session well received)",
+          "HWI: media training — Hume Trust + CNH + HWI interaction toolkit launched; Hindi & Marathi versions coming",
+          "Jagah fellowship: capacity building in storytelling of and for place",
+          "Green Stories: capacity building for filmmakers — now an ongoing initiative",
+          "Many orgs running media trainings and fellowships independently — ecosystem has picked this up"
+        ],
+        plans: [
+          "Support existing partners where needed — not proactively adding here",
+          "Consider deprioritising as an active RF strategy — ecosystem is self-sustaining"
+        ],
+        pipeline: ["CNH", "Jagah Fellowship", "Green Stories", "HWI", "IDR", "CRA", "Climate Trends", "Asar"]
+      }
+    ]
+  }
+
+  ,
+
+  // ── URBAN & BEYOND THESIS ────────────────────────────────────────────
+  "Urban Thesis": {
+    accent: "#1E5C7A",
+    accentBg: "#eef4f7",
+    accentBorder: "#cad9e1",
+    roles: ["Anchor", "Orchestrator", "Solution provider", "Enabler"],
+    framework: {
+      label: "POESI framework",
+      topShift: "Cities from climate-change inducing consumers → climate-conscious, participatory, resilient cities",
+      strategies: [
+        { id: "P", name: "Place based ownership",                            status: "active",   mapsTo: "urb-s1", note: "NOTF" },
+        { id: "O", name: "Enable actors to act locally",                     status: "emergent", note: "to emerge from sensemaking" },
+        { id: "E", name: "Enable internationality and adjacency in solutions", status: "emergent", note: "to emerge from sensemaking" },
+        { id: "I", name: "Making knowledge available & used (PDGI)",         status: "emergent", note: "to emerge from sensemaking" }
+      ],
+      themes: ["Air Quality", "Waste", "Water", "Energy"]
+    },
+    xAxis: {
+      label: "Strategy Maturity →",
+      stages: [
+        "Who is driving\nthe strategy",
+        "Framework of\napproach",
+        "Adoption / Beta\ntest of framework",
+        "Usage\noutside",
+        "Formal\nStructures"
+      ]
+    },
+    yAxis: {
+      label: "Who Drives",
+      levels: ["RF driven", "RF enabled", "Partner led", "Ecosystem Belief"]
+    },
+    strategies: [
+      {
+        id: "urb-s1",
+        name: "Place-based\nOwnership",
+        subtitle: "POESI 1 — NOTF (RF-driven, Socratus)",
+        priority: "P0",
+        x: 2.0, y: 0.5,
+        color: "#1E5C7A",
+        shifts: [
+          "Fragmented CSO efforts → Place-based ownership platform",
+          "Supply-driven solutions → Demand-driven community ownership",
+          "Invisible local action → Documented stories surfacing nationally"
+        ],
+        updates: [
+          "Bengaluru outreach building community base",
+          "Bengaluru convening for network action; councillor library enabled",
+          "24 solution providers across themes on NOTF",
+          "47 stories on NOTF platform across themes",
+          "Special Committee for Bangalore: RF + BPAC + Jana + WRI convening monthly to maximise 16th commission finance"
+        ],
+        plans: [
+          "Onboard 1 actor each from state, market, society in 1 neighbourhood (3mo)",
+          "Identify anchor partners in 10 target cities — Mumbai/Bhubaneswar/Pune/Chennai/Ahmedabad/Shillong/Bengaluru/Delhi/Kochi/Hyderabad (6mo)",
+          "NOTF platform active in 5 corporations beyond Bangalore (12mo)",
+          "300 members on NOTF platform; emerges as discovery platform (12mo)"
+        ],
+        pipeline: ["Socratus", "BPAC", "Jana", "WRI", "BRM Mumbai", "Bakul Bhubaneswar", "Citizen Matters", "Narrative Hub"]
+      },
+      {
+        id: "urb-th1",
+        name: "Air\nQuality",
+        subtitle: "Theme — oaq.notf.in live",
+        priority: "P0",
+        x: 2.6, y: 1.4,
+        color: "#2E7090",
+        shifts: [
+          "Fragmented air-data → Community-owned, location-aware AQI",
+          "Top-down monitoring → Citizen-deployed sensor network"
+        ],
+        updates: [
+          "OAQ artefact live at oaq.notf.in",
+          "Google funded 800 sensors capex",
+          "Nandan Reddy: potential 200-300 sensors + Airview opex",
+          "BPAC deploying in Bangalore hotspots",
+          "OAQ as citizen action border artefact under NOTF"
+        ],
+        plans: [
+          "Open call for community sensor owners + contributors (3mo)",
+          "Onboard new partners; plan from Google sensors to BPAC-identified communities (6mo)",
+          "Source apportionment + sensemaking; NOTF platform takes OAQ to all NOTF cities (12mo)",
+          "Sustain AQ campaigns through funder partners"
+        ],
+        pipeline: ["Aurassure", "Urban Emissions", "Envirocatalysts", "Respirer", "IIT-D", "IIT-K", "CPCB", "CSTEP", "BPAC", "OpenAQ", "Saahas", "APAG", "CEEW", "Asar", "Samaaj", "Tarkam", "Earthmetry", "Co-efficient Giving", "Clean Air Fund", "Nandan Reddy", "Google"]
+      },
+      {
+        id: "urb-th2",
+        name: "Waste",
+        subtitle: "Theme — V0.0 → V1.0 canvas",
+        priority: "P1",
+        x: 1.0, y: 0.25,
+        color: "#3F6F4E",
+        shifts: [
+          "Sectoral fragmentation → Strategic canvas + co-pool",
+          "Project-by-project funding → Sector-aligned grant strategy"
+        ],
+        updates: [
+          "V0.0 canvas exists; V1.0 in coming weeks",
+          "April last-week in-person convening to build V1 with data",
+          "Socialising canvas with funders"
+        ],
+        plans: [
+          "Release V1.0 of map; open invitation to contributors (3mo)",
+          "Build co-pool based on canvas; device grant strategies for the sector (6mo)",
+          "Move from canvas to strategy execution (12mo)",
+          "Discovery of canvas value + lessons learnt; ground-truthing (12mo)"
+        ],
+        pipeline: ["Desta", "Socratus", "Saahas", "Saahas Zero Waste", "Waste Warriors", "Reap Benefit", "EcoSattva", "CSTEP", "Plan Foundation", "UTIF", "CEEW", "Recyclink", "Fish-India", "Borda", "Janagraha", "Tata Trusts", "SBI", "HUL", "Villigro"]
+      },
+      {
+        id: "urb-th3",
+        name: "Water",
+        subtitle: "Theme — bottom-up canvas",
+        priority: "P1",
+        x: 0.55, y: 0.9,
+        color: "#4A6B8A",
+        shifts: [
+          "Rural-only urban-water absence → Urban water canvas + active funder portfolio",
+          "Siloed water orgs → Aligned partners around urban systems"
+        ],
+        updates: [
+          "Talking to Biome (urban IUWM principles), Tags Forum (backwaters), Ecosttava (river ecosystems)",
+          "RF Internal mapping water canvas — bottom-up",
+          "Arghyam keen to revive urban water portfolio (currently rural-focused)",
+          "Infy, ITC, Sattva, Arghyam want to align as one team before tactical funding"
+        ],
+        plans: [
+          "Map urban water canvas based on Biome/Tags/Ecosttava work (3mo)",
+          "Understand efficiency, reuse, urban groundwater recharge (6mo)",
+          "Present + socialise canvas with Arghyam, Infy, ITC, Sattva (6mo)",
+          "Align ecosystem; design tactical funding (12mo)"
+        ],
+        pipeline: ["Biome", "Tags Forum", "Ecosttava", "Arghyam", "Infy", "ITC", "Sattva"]
+      },
+      {
+        id: "urb-th4",
+        name: "Energy",
+        subtitle: "Theme — narratives only",
+        priority: "P3",
+        x: 0.15, y: 0.15,
+        color: "#7A5C2E",
+        shifts: [
+          "Narrative-only engagement → Identified intervention areas",
+          "Multiple uncoordinated partners → Mapped energy landscape under POESI"
+        ],
+        updates: [
+          "Need to understand who's addressing what under energy",
+          "Prayas: study-share-only, no direct intervention",
+          "All focus currently on narratives",
+          "Exploring with CEEW, WRI, CEED"
+        ],
+        plans: [
+          "Map current actors + intervention areas (3mo)",
+          "Identify what work could emerge from partner conversations (6mo)",
+          "Build narrative scaffolding (6mo)",
+          "Decide on intervention scope after mapping (12mo)"
+        ],
+        pipeline: ["Prayas", "CEEW", "WRI", "CEED"]
+      }
+    ]
+  }
+
+};
+
+// ══════════════════════════════════════════════════════════════════════
+//  Runtime state
+// ══════════════════════════════════════════════════════════════════════
+
+const NS = "http://www.w3.org/2000/svg";
+const svg = document.getElementById("matrix-svg");
+const M = { top: 26, right: 30, bottom: 64, left: 116 };
+
+let activeThesis = "All Theses";
+let plotW = 0, plotH = 0;
+let selectedId = null;
+let drag = null;
+
+const BOX_W = 92, BOX_H = 40;
+
+function getConfig() {
+  if (activeThesis === "All Theses") {
+    const all = Object.entries(THESES).flatMap(([thesisName, t]) =>
+      t.strategies.map(s => {
+        const j = jitterFor(s.id);
+        return {
+          ...s,
+          x: s.x + j.dx,
+          y: s.y + j.dy,
+          color: t.accent,
+          _thesis: thesisName,
+          _thesisAccent: t.accent,
+          _origRef: s
+        };
+      })
+    );
+    const ref = THESES["Data Thesis"];
+    const maxX = ref.xAxis.stages.length - 1;
+    const maxY = ref.yAxis.levels.length - 1;
+    avoidCollisions(all, maxX, maxY);
+    return {
+      accent: "#1a1a1a",
+      accentBg: "#f7f6f4",
+      accentBorder: "#e0e0e0",
+      roles: ref.roles,
+      xAxis: ref.xAxis,
+      yAxis: ref.yAxis,
+      strategies: all,
+      _isAll: true,
+      _thesisCounts: Object.fromEntries(
+        Object.entries(THESES).map(([n, t]) => [n, t.strategies.length])
+      ),
+      _thesisAccents: Object.fromEntries(
+        Object.entries(THESES).map(([n, t]) => [n, t.accent])
+      )
+    };
+  }
+  return THESES[activeThesis];
+}
+
+// ── Accent colour update ──────────────────────────────────
+
+function applyAccent(cfg) {
+  const r = document.documentElement.style;
+  r.setProperty("--accent", cfg.accent);
+  r.setProperty("--accent-bg", cfg.accentBg);
+  r.setProperty("--accent-border", cfg.accentBorder);
+  document.querySelector("header").style.borderBottomColor = cfg.accent;
+}
+
+// ── Coordinate helpers ────────────────────────────────────
+
+function getSize() {
+  const r = svg.getBoundingClientRect();
+  return { w: r.width, h: r.height };
+}
+
+function recomputePlot() {
+  const { w, h } = getSize();
+  plotW = w - M.left - M.right;
+  plotH = h - M.top - M.bottom;
+}
+
+function toSVG(dx, dy) {
+  const cfg = getConfig();
+  const maxX = cfg.xAxis.stages.length - 1;
+  const maxY = cfg.yAxis.levels.length - 1;
+  return {
+    x: M.left + (dx / maxX) * plotW,
+    y: M.top  + (dy / maxY) * plotH
+  };
+}
+
+// Deterministic jitter from strategy id — used in All-Theses mode to seed
+// initial separation between boxes authored at similar positions. The heavy
+// lifting is done by avoidCollisions() afterwards.
+function jitterFor(id) {
+  let h = 5381;
+  for (let i = 0; i < id.length; i++) h = (((h << 5) + h) + id.charCodeAt(i)) | 0;
+  const ax = ((h & 0xffff) / 0xffff) - 0.5;          // -0.5 to +0.5
+  const ay = (((h >> 16) & 0xffff) / 0xffff) - 0.5;  // -0.5 to +0.5
+  return { dx: ax * 0.4, dy: ay * 0.3 };             // ±0.20 x, ±0.15 y units (seed only)
+}
+
+// Iterative collision avoidance for All-Theses mode — pushes overlapping
+// boxes apart along the axis of smaller overlap. Converges quickly (n=19).
+// Box footprint in matrix-units is ~0.65 x 0.34 (slightly padded vs actual).
+function avoidCollisions(strategies, maxX, maxY) {
+  const BOX_X = 0.65, BOX_Y = 0.34, ITER = 60, EPS = 0.005;
+  for (let iter = 0; iter < ITER; iter++) {
+    let moved = false;
+    for (let i = 0; i < strategies.length; i++) {
+      for (let j = i + 1; j < strategies.length; j++) {
+        const a = strategies[i], b = strategies[j];
+        const dx = b.x - a.x;
+        const dy = b.y - a.y;
+        const ox = BOX_X - Math.abs(dx);
+        const oy = BOX_Y - Math.abs(dy);
+        if (ox > 0 && oy > 0) {
+          if (ox < oy) {
+            const push = ox / 2 + EPS;
+            const sign = dx >= 0 ? 1 : -1;
+            a.x -= sign * push; b.x += sign * push;
+          } else {
+            const push = oy / 2 + EPS;
+            const sign = dy >= 0 ? 1 : -1;
+            a.y -= sign * push; b.y += sign * push;
+          }
+          moved = true;
+        }
+      }
+    }
+    if (!moved) break;
+  }
+  // Clamp to chart bounds
+  strategies.forEach(s => {
+    s.x = Math.max(0, Math.min(maxX, s.x));
+    s.y = Math.max(0, Math.min(maxY, s.y));
+  });
+}
+
+function toData(sx, sy) {
+  const cfg = getConfig();
+  const maxX = cfg.xAxis.stages.length - 1;
+  const maxY = cfg.yAxis.levels.length - 1;
+  return {
+    x: Math.max(0, Math.min(maxX, ((sx - M.left) / plotW) * maxX)),
+    y: Math.max(0, Math.min(maxY, ((sy - M.top) / plotH) * maxY))
+  };
+}
+
+function svgPoint(e) {
+  const r = svg.getBoundingClientRect();
+  const src = e.touches ? e.touches[0] : e;
+  return { x: src.clientX - r.left, y: src.clientY - r.top };
+}
+
+function nearestLabel(val, arr) {
+  return arr[Math.max(0, Math.min(arr.length - 1, Math.round(val)))];
+}
+
+// ── SVG element helper ────────────────────────────────────
+
+function el(tag, attrs = {}, text) {
+  const e = document.createElementNS(NS, tag);
+  for (const [k, v] of Object.entries(attrs)) e.setAttribute(k, v);
+  if (text !== undefined) e.textContent = text;
+  return e;
+}
+
+const FF = "-apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif";
+
+// ── Render ────────────────────────────────────────────────
+
+function render() {
+  recomputePlot();
+  if (plotW <= 0 || plotH <= 0) return;
+  svg.innerHTML = "";
+
+  const cfg = getConfig();
+  const { w, h } = getSize();
+  const maxX = cfg.xAxis.stages.length - 1;
+  const maxY = cfg.yAxis.levels.length - 1;
+
+  // Background
+  svg.appendChild(el("rect", { x: 0, y: 0, width: w, height: h, fill: "#f7f6f4" }));
+  svg.appendChild(el("rect", {
+    x: M.left, y: M.top, width: plotW, height: plotH,
+    fill: "#fff", stroke: "#ddd", "stroke-width": 1
+  }));
+
+  // Subtle row bands
+  for (let i = 0; i < maxY; i++) {
+    const { y: y0 } = toSVG(0, i);
+    const { y: y1 } = toSVG(0, i + 1);
+    svg.appendChild(el("rect", {
+      x: M.left, y: y0, width: plotW, height: y1 - y0,
+      fill: i % 2 === 0 ? "rgba(0,0,0,0.012)" : "transparent"
+    }));
+  }
+
+  // Grid lines (vertical)
+  for (let i = 0; i <= maxX; i++) {
+    const { x } = toSVG(i, 0);
+    if (i > 0 && i < maxX) {
+      svg.appendChild(el("line", {
+        x1: x, y1: M.top, x2: x, y2: M.top + plotH,
+        stroke: "#ebebeb", "stroke-width": 1, "stroke-dasharray": "4,4"
+      }));
+    }
+    svg.appendChild(el("line", {
+      x1: x, y1: M.top + plotH, x2: x, y2: M.top + plotH + 5,
+      stroke: "#ccc", "stroke-width": 1
+    }));
+  }
+
+  // Grid lines (horizontal)
+  for (let i = 0; i <= maxY; i++) {
+    const { y } = toSVG(0, i);
+    if (i > 0 && i < maxY) {
+      svg.appendChild(el("line", {
+        x1: M.left, y1: y, x2: M.left + plotW, y2: y,
+        stroke: "#ebebeb", "stroke-width": 1, "stroke-dasharray": "4,4"
+      }));
+    }
+    svg.appendChild(el("line", {
+      x1: M.left - 5, y1: y, x2: M.left, y2: y,
+      stroke: "#ccc", "stroke-width": 1
+    }));
+  }
+
+  // X-axis labels
+  for (let i = 0; i <= maxX; i++) {
+    const { x } = toSVG(i, 0);
+    const ly = M.top + plotH + 14;
+    cfg.xAxis.stages[i].split("\n").forEach((part, li) => {
+      svg.appendChild(el("text", {
+        x, y: ly + li * 13,
+        "text-anchor": "middle", "font-size": "10", fill: "#999",
+        "font-family": FF
+      }, part));
+    });
+  }
+
+  // Y-axis labels
+  for (let i = 0; i <= maxY; i++) {
+    const { y } = toSVG(0, i);
+    svg.appendChild(el("text", {
+      x: M.left - 10, y: y + 4,
+      "text-anchor": "end", "font-size": "11", fill: "#555",
+      "font-weight": "500", "font-family": FF
+    }, cfg.yAxis.levels[i]));
+  }
+
+  // Axis title X
+  svg.appendChild(el("text", {
+    x: M.left + plotW / 2, y: h - 6,
+    "text-anchor": "middle", "font-size": "11", fill: "#666",
+    "font-weight": "600", "font-family": FF
+  }, cfg.xAxis.label));
+
+  // Axis title Y (rotated)
+  const yTG = el("g", { transform: `translate(12, ${M.top + plotH / 2}) rotate(-90)` });
+  yTG.appendChild(el("text", {
+    x: 0, y: 0,
+    "text-anchor": "middle", "font-size": "11", fill: "#666",
+    "font-weight": "600", "font-family": FF
+  }, cfg.yAxis.label));
+  svg.appendChild(yTG);
+
+  // Maturity arrow
+  const arY = M.top - 11;
+  svg.appendChild(el("line", {
+    x1: M.left, y1: arY, x2: M.left + plotW - 8, y2: arY,
+    stroke: "#ccc", "stroke-width": 1.5
+  }));
+  svg.appendChild(el("polygon", {
+    points: `${M.left + plotW - 4},${arY - 4} ${M.left + plotW + 4},${arY} ${M.left + plotW - 4},${arY + 4}`,
+    fill: "#ccc"
+  }));
+
+  // ── Strategy boxes ──────────────────────────────────────
+  cfg.strategies.forEach(s => {
+    const { x: cx, y: cy } = toSVG(s.x, s.y);
+    const isSelected = selectedId === s.id;
+    const isDimmed   = selectedId && !isSelected;
+
+    const g = el("g");
+    g.style.cursor = "grab";
+    g.style.opacity = isDimmed ? "0.25" : "1";
+
+    // Glow ring (selected)
+    if (isSelected) {
+      g.appendChild(el("rect", {
+        x: cx - BOX_W / 2 - 5, y: cy - BOX_H / 2 - 5,
+        width: BOX_W + 10, height: BOX_H + 10,
+        rx: 11, ry: 11,
+        fill: "none", stroke: s.color, "stroke-width": 2.5, opacity: 0.3
+      }));
+    }
+
+    // Shadow
+    g.appendChild(el("rect", {
+      x: cx - BOX_W / 2 + 2, y: cy - BOX_H / 2 + 3,
+      width: BOX_W, height: BOX_H, rx: 7, ry: 7,
+      fill: "rgba(0,0,0,0.15)"
+    }));
+
+    // Body
+    g.appendChild(el("rect", {
+      x: cx - BOX_W / 2, y: cy - BOX_H / 2,
+      width: BOX_W, height: BOX_H, rx: 7, ry: 7,
+      fill: s.color,
+      stroke: isSelected ? "rgba(255,255,255,0.85)" : "rgba(255,255,255,0.2)",
+      "stroke-width": isSelected ? 2 : 1
+    }));
+
+    // Label text
+    const lines = s.name.split("\n");
+    const lh = 13;
+    const startLY = cy - ((lines.length - 1) * lh) / 2;
+    lines.forEach((line, i) => {
+      g.appendChild(el("text", {
+        x: cx - 6, y: startLY + i * lh,
+        "text-anchor": "middle", "dominant-baseline": "middle",
+        "font-size": "11", "font-weight": "600", fill: "#fff",
+        "pointer-events": "none", "font-family": FF
+      }, line));
+    });
+
+    // Priority badge (top-right)
+    if (s.priority) {
+      const pColors = { P0: "#FF6B00", P1: "#2D8A4E", P2: "#888", P3: "#aaa" };
+      const pc = pColors[s.priority] || "#aaa";
+      const bx = cx + BOX_W / 2 - 2;
+      const by = cy - BOX_H / 2 + 2;
+      g.appendChild(el("rect", {
+        x: bx - 16, y: by,
+        width: 17, height: 13,
+        rx: 3, ry: 3,
+        fill: pc, opacity: 0.92
+      }));
+      g.appendChild(el("text", {
+        x: bx - 7.5, y: by + 9.5,
+        "text-anchor": "middle",
+        "font-size": "8.5", "font-weight": "700", fill: "#fff",
+        "pointer-events": "none", "font-family": FF
+      }, s.priority));
+    }
+
+    // Center dot
+    g.appendChild(el("circle", {
+      cx, cy, r: 2.5, fill: "#fff", opacity: 0.45, "pointer-events": "none"
+    }));
+
+    // Drag handler
+    g.addEventListener("mousedown", e => {
+      e.preventDefault();
+      const pt = svgPoint(e);
+      drag = {
+        id: s.id,
+        offsetX: pt.x - cx,
+        offsetY: pt.y - cy,
+        moved: false,
+        startPt: pt
+      };
+    });
+
+    svg.appendChild(g);
+  });
+}
+
+// ── Drag & Click ──────────────────────────────────────────
+
+svg.addEventListener("mousemove", e => {
+  if (!drag) return;
+  const pt = svgPoint(e);
+  const dist = Math.hypot(pt.x - drag.startPt.x, pt.y - drag.startPt.y);
+  if (dist > 5) drag.moved = true;
+  if (!drag.moved) return;
+
+  const s = getConfig().strategies.find(s => s.id === drag.id);
+  if (!s) return;
+  const d = toData(pt.x - drag.offsetX, pt.y - drag.offsetY);
+  s.x = d.x; s.y = d.y;
+  // In All-Theses mode, also update the original strategy so the drag persists
+  // across re-syntheses. Subtract the jitter that synthesis adds.
+  if (s._origRef) {
+    const j = jitterFor(s.id);
+    s._origRef.x = d.x - j.dx;
+    s._origRef.y = d.y - j.dy;
+  }
+  render();
+  if (selectedId === drag.id) refreshPositionTags(s);
+});
+
+window.addEventListener("mouseup", () => {
+  if (!drag) return;
+  const { moved, id } = drag;
+  drag = null;
+  if (!moved) selectStrategy(id);
+  render();
+});
+
+// ── Detail Panel ──────────────────────────────────────────
+
+function refreshPositionTags(s) {
+  const posEl = document.getElementById("d-pos");
+  if (!posEl) return;
+  const cfg = getConfig();
+  const xLabel = nearestLabel(s.x, cfg.xAxis.stages).replace("\n", " ");
+  const yLabel = nearestLabel(s.y, cfg.yAxis.levels);
+  const pColors = { P0: "p0", P1: "p1" };
+  posEl.innerHTML =
+    `<span class="position-tag">${yLabel}</span>` +
+    `<span class="position-tag">${xLabel}</span>` +
+    (s.priority ? `<span class="priority-tag ${pColors[s.priority] || ''}">${s.priority}</span>` : "");
+}
+
+function selectStrategy(id) {
+  selectedId = id;
+  const s = getConfig().strategies.find(s => s.id === id);
+  if (!s) return;
+
+  const cfg = getConfig();
+
+  document.getElementById("empty-state").style.display = "none";
+  document.getElementById("framework-card").style.display = "none";
+  document.getElementById("thesis-legend").style.display = "none";
+  document.getElementById("detail-header-wrap").style.display = "block";
+  document.getElementById("d-name").textContent = s.name.replace("\n", " ");
+  document.getElementById("d-sub").textContent = s.subtitle;
+  refreshPositionTags(s);
+
+  const pipelineHtml = (s.pipeline && s.pipeline.length)
+    ? `<div class="detail-section">
+        <div class="section-title">Key partners / pipeline</div>
+        <div class="pipeline-wrap">
+          ${s.pipeline.map(p => `<span class="pipeline-chip">${p}</span>`).join("")}
+        </div>
+       </div>`
+    : "";
+
+  document.getElementById("d-body").innerHTML = `
+    <div class="detail-section">
+      <div class="section-title">Shifts we want to see</div>
+      ${s.shifts.map(sh => {
+        const parts = sh.split("→");
+        return parts.length === 2
+          ? `<div class="shift-row"><span class="shift-arrow">→</span><span><strong>${parts[0].trim()}</strong>&ensp;→&ensp;${parts[1].trim()}</span></div>`
+          : `<div class="shift-row"><span class="shift-arrow">→</span><span>${sh}</span></div>`;
+      }).join("")}
+    </div>
+
+    <div class="detail-section">
+      <div class="section-title">Roles</div>
+      <div class="roles-wrap">
+        ${cfg.roles.map(r => `<span class="role-chip">${r}</span>`).join("")}
+      </div>
+    </div>
+
+    <div class="detail-section">
+      <div class="section-title">Updates · last 3–6 months</div>
+      ${s.updates.map(u => `<div class="bullet-row">${u}</div>`).join("")}
+    </div>
+
+    <div class="detail-section">
+      <div class="section-title">Plans · next 3 months</div>
+      ${s.plans.map(p => `<div class="bullet-row plan">${p}</div>`).join("")}
+    </div>
+
+    ${pipelineHtml}
+  `;
+
+  render();
+}
+
+function clearDetail() {
+  selectedId = null;
+  document.getElementById("detail-header-wrap").style.display = "none";
+  const cfg = getConfig();
+  const fc = document.getElementById("framework-card");
+  const es = document.getElementById("empty-state");
+  const tl = document.getElementById("thesis-legend");
+  // Three mutually exclusive empty-state surfaces: legend (All), framework (Urban-style), generic
+  if (cfg._isAll) {
+    es.style.display = "none";
+    fc.style.display = "none";
+    tl.style.display = "flex";
+  } else if (cfg.framework) {
+    es.style.display = "none";
+    fc.style.display = "flex";
+    tl.style.display = "none";
+  } else {
+    es.style.display = "";
+    fc.style.display = "none";
+    tl.style.display = "none";
+  }
+}
+
+// ── Thesis legend (All Theses mode) ────────────────────────
+function renderThesisLegend() {
+  const cfg = getConfig();
+  const tl = document.getElementById("thesis-legend");
+  if (!cfg._isAll) {
+    tl.innerHTML = "";
+    return;
+  }
+  const groups = Object.entries(cfg._thesisCounts).map(([name, count]) => {
+    const accent = cfg._thesisAccents[name];
+    const t = THESES[name];
+
+    // If thesis has a framework (e.g., Urban POESI), legend shows the framework strategies.
+    // Active framework items are clickable → select their mapped matrix box.
+    // Emergent framework items are listed but visually muted.
+    let stratList, headerCount;
+    if (t.framework && t.framework.strategies) {
+      stratList = t.framework.strategies.map(fs => {
+        const isActive = fs.status === "active";
+        const isEmergent = fs.status === "emergent";
+        const clickable = isActive && fs.mapsTo;
+        return `
+          <div class="thesis-legend-strategy ${isEmergent ? 'is-emergent' : ''} ${clickable ? 'is-clickable' : ''}"
+               ${clickable ? `data-strategy-id="${fs.mapsTo}"` : ''}
+               style="--strategy-accent:${accent}">
+            <span class="strat-id">${fs.id}</span>
+            <span class="strat-name">${fs.name}</span>
+            <span class="strat-status">${isActive ? 'active' : 'emergent'}</span>
+          </div>
+        `;
+      }).join("");
+      const themeLine = t.framework.themes && t.framework.themes.length
+        ? `<div class="thesis-legend-themes">Themes on matrix: ${t.framework.themes.join(" · ")}</div>`
+        : "";
+      stratList = stratList + themeLine;
+      headerCount = `${t.framework.strategies.length} POESI · ${count} on matrix`;
+    } else {
+      stratList = t.strategies.map(s => `
+        <div class="thesis-legend-strategy is-clickable" data-strategy-id="${s.id}" style="--strategy-accent:${accent}">
+          <span class="strat-bullet">●</span>
+          <span class="strat-name">${s.name.replace(/\n/g, " ")}</span>
+          <span class="strat-priority">${s.priority || ""}</span>
+        </div>
+      `).join("");
+      headerCount = `${count} ${count === 1 ? "strategy" : "strategies"}`;
+    }
+
+    return `
+      <div class="thesis-legend-group">
+        <div class="thesis-legend-row" data-thesis="${name}">
+          <span class="thesis-legend-dot" style="background:${accent}"></span>
+          <span class="thesis-legend-name">${name}</span>
+          <span class="thesis-legend-count">${headerCount}</span>
+        </div>
+        <div class="thesis-legend-strategies">${stratList}</div>
+      </div>
+    `;
+  }).join("");
+  tl.innerHTML = `
+    <div class="thesis-legend-label">All theses · ${cfg.strategies.length} strategies overlaid</div>
+    ${groups}
+    <div class="thesis-legend-hint">Click a thesis header to filter the matrix.<br>Click a strategy name to jump to its detail.</div>
+  `;
+  // Thesis header → switch dropdown
+  tl.querySelectorAll(".thesis-legend-row").forEach(row => {
+    row.addEventListener("click", () => {
+      const target = row.getAttribute("data-thesis");
+      const sel = document.getElementById("thesis-select");
+      sel.value = target;
+      sel.dispatchEvent(new Event("change"));
+    });
+  });
+  // Strategy name → select that strategy on the matrix (only clickable rows)
+  tl.querySelectorAll(".thesis-legend-strategy.is-clickable").forEach(el => {
+    el.addEventListener("click", e => {
+      e.stopPropagation();
+      const id = el.getAttribute("data-strategy-id");
+      if (id) selectStrategy(id);
+    });
+  });
+}
+
+// ── Framework UI (POESI-style breadcrumb + side card) ─────
+function renderFrameworkUI() {
+  const cfg = getConfig();
+  const sub = document.getElementById("panel-sublabel");
+  const fc = document.getElementById("framework-card");
+
+  if (!cfg.framework) {
+    sub.style.display = "none";
+    sub.innerHTML = "";
+    fc.style.display = "none";
+    fc.innerHTML = "";
+    return;
+  }
+
+  // Panel sublabel: 1-line breadcrumb under "Strategy Maturity Matrix"
+  const breadcrumb = cfg.framework.strategies.map(s =>
+    `<span class="poesi-item ${s.status}">${s.id} · ${s.name}</span>`
+  ).join("");
+  sub.style.display = "";
+  sub.innerHTML =
+    `<span class="poesi-badge">${cfg.framework.label}</span>` +
+    breadcrumb;
+
+  // Side framework card
+  const stratHtml = cfg.framework.strategies.map(s => `
+    <div class="fc-strategy ${s.status}">
+      <div class="fc-strategy-row">
+        <span class="fc-id">${s.id}</span>
+        <span class="fc-name">${s.name}</span>
+        <span class="fc-status">${s.status}</span>
+      </div>
+      <div class="fc-note">${s.note}</div>
+    </div>
+  `).join("");
+
+  fc.innerHTML = `
+    <div class="fc-label">${cfg.framework.label}</div>
+    <div class="fc-shift">${cfg.framework.topShift}</div>
+    ${stratHtml}
+    <div class="fc-hint">Click any strategy box on the matrix to explore details</div>
+  `;
+}
+
+// ── Thesis switcher ───────────────────────────────────────
+
+document.getElementById("thesis-select").addEventListener("change", e => {
+  activeThesis = e.target.value;
+  applyAccent(getConfig());
+  renderFrameworkUI();
+  renderThesisLegend();
+  clearDetail();
+  render();
+});
+
+// ── Init ──────────────────────────────────────────────────
+
+applyAccent(getConfig());
+renderFrameworkUI();
+renderThesisLegend();
+clearDetail();
+requestAnimationFrame(() => requestAnimationFrame(render));
+window.addEventListener("resize", render);
+</script>
+</body>
+</html>
