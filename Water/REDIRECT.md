@@ -6,7 +6,7 @@ The India Water Canvas v2.0+ lives in a dedicated repository:
 
 ## → [`Ashwask/india-water-canvas`](https://github.com/Ashwask/india-water-canvas)
 
-- Live dashboard (once DNS is live): `https://waterdashboard.com/`
+- Live dashboard (once DNS is live): `https://waterdashboard.in/`
 - GitHub Pages mirror: `https://ashwask.github.io/india-water-canvas/`
 - Tag: `v2.0`
 
@@ -16,7 +16,7 @@ This repository (`Ashwask/RFPartnerMap`) serves two artefacts:
 - The Rainmatter Partner Map dashboard at root (`dashboard.html`)
 - (Previously) the India Water Canvas in `Water/`
 
-For a custom domain like `waterdashboard.com` to land cleanly on the water canvas at root, the canvas needed its own repository. This folder remains for historical context · the v1.0 + v1.x snapshots stay here for provenance.
+For a custom domain like `waterdashboard.in` to land cleanly on the water canvas at root, the canvas needed its own repository. This folder remains for historical context · the v1.0 + v1.x snapshots stay here for provenance.
 
 ## History preserved
 
