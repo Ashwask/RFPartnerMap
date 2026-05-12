@@ -225,3 +225,141 @@ The funding sequence implied:
 - Diaspora-capital mobilization: who would convene? What vehicle would they trust?
 
 The next file in the folder, `imagination.md`, takes the meta-step back: India lacks a coherent imagination of itself as a water civilization, and the funding ecosystem reflects that absence. The `build-plan.md` then proposes one concrete answer to "what if the imagination were built?"
+
+## The ₹ ladder — who deploys what, ranked
+
+The flow read above gives the per-layer aggregate. The leverage conversation needs a sharper cut: at funder level, not at layer level, where exactly does the rupee land?
+
+Approximate annual disbursement ranking, top to bottom, ±30% directional and aged from 2024-25 disclosure cycles. The point is not the precision of any line; it is the shape — a steep cliff from public outlay to philanthropic outlay across two orders of magnitude.
+
+**At the top, government schemes are the gravity:**
+
+- **JJM 2.0** runs at ~₹1.45 lakh cr/year average to clear ₹8.69 lakh cr by Dec 2028. Even on a steeply backloaded profile, the FY25-26 + FY26-27 + FY27-28 disbursements alone dwarf every other actor combined.
+- **MGNREGA water-asset works** — at ~60% of an ~₹86,000 cr/year MGNREGA outlay, ~₹50,000 cr/year is flowing through farm ponds + check dams + soak pits + recharge structures + well construction. The single largest *unbranded* water spend in the country.
+- **AMRUT 2.0** — ~₹55,000-60,000 cr/year average across the 5-year cycle (~₹2.99 lakh cr / 5).
+- **PMKSY** — ~₹18,000-20,000 cr/year average across AIBP + Har Khet Ko Pani + PDMC + WDC components (~₹93,000 cr / 5).
+- **Namami Gange Phase II** — ~₹4,500-5,500 cr/year through 2026 (~₹22,500 cr / 4-5).
+- **Atal Bhujal Yojana** — ~₹1,200 cr/year average (~₹6,000 cr / 5), modest in rupee weight, outsized in design influence.
+- **Swachh Bharat (G) Phase II partial extension** — ~₹25,000-30,000 cr/year residual.
+- **State-level missions** (Mission Bhagiratha residual, Sujalam Sufalam, Cauvery Stage 6, Tamil Nadu Kudimaramath, Telangana O&M) — collectively ~₹15,000-20,000 cr/year, lumpy.
+- **Compensatory Afforestation Fund** indirect water + forest spend — ~₹5,000-8,000 cr/year across states.
+
+Add it up and the central + state government water outlay sits at order of ₹2.5-3.5 lakh cr/year. **The state itself has no clean aggregator for this number.** That is itself a structural finding (`landscape.md`).
+
+**Then, multilateral + bilateral, lumpy by year:**
+
+- **World Bank India water portfolio** — cumulative ~$2.6B active commitment, disburses ~$400-500M/year ≈ ₹3,500-4,500 cr/year.
+- **ADB India** — ~$1.5-2B/year in approvals across the water + urban portfolio, disburses ~₹2,000-3,500 cr/year.
+- **JICA** — ~₹1,000-1,500 cr/year on Indian water (Bengaluru, Chennai, Agra, Varanasi multi-tranche).
+- **KfW + AFD + GIZ + UNICEF + smaller bilaterals** — collectively ~₹1,000-2,000 cr/year.
+
+**Then domestic CSR water, ranked by single-corporate intensity (not sector-aggregate):**
+
+- **Reliance Foundation** total CSR ₹2,156 cr (FY25); water portion plausibly ₹200-300 cr.
+- **HUL** ~₹254 cr CSR (FY25); water + sanitation ~₹80-100 cr.
+- **ITC Mission Sunehra Kal** — water within ₹400-500 cr of integrated NRM/livelihood spend; water-attributable ~₹100-150 cr/year.
+- **Tata group (Tata Steel, Tata Power, Tata Chemicals + corporate)** — water-attributable CSR ~₹100-150 cr/year combined.
+- **Coca-Cola India + PepsiCo + Nestlé + Hindustan Coca-Cola Beverages** — collective replenishment + watershed claims ~₹150-250 cr/year (verification posture is a separate question — see capture risks below).
+- **Vedanta + Adani + JSW + Tata Steel + Hindalco + Hindustan Zinc** — license-to-operate water spend in mining + manufacturing belts ~₹150-300 cr/year combined.
+- **L&T** ~₹164 cr CSR (FY25); water/sanitation ~₹15-25 cr.
+- **HDFC + ICICI + Axis + Bharti + HCL + Mahindra + GAIL + NTPC + ONGC** — water tranches in larger CSR portfolios, individually ₹10-50 cr/year.
+
+Sector-aggregate CSR water + sanitation lands at ~₹7,000-10,000 cr/year as noted earlier; the visible top of the corporate distribution is concentrated in 15-20 names.
+
+**Then Indian philanthropy, water-intentional rather than incidental:**
+
+- **Arghyam (Rohini Nilekani Philanthropies)** — ~₹40-60 cr/year run rate. The dominant water-only India funder.
+- **A.T.E. Chandra Foundation (ATECF)** — directionally ~₹50-150 cr/year on water bodies (range reflects opacity in disclosure; estimates vary widely).
+- **Tata Trusts (water mission + Coastal Salinity Prevention Cell + Mission Garima)** — ~₹50-70 cr/year water-attributable.
+- **Azim Premji (APPI + Foundation)** — water-embedded in field-action backbone; water-attributable ~₹15-30 cr/year through funded NGOs (FES, WASSAN, others).
+- **India Climate Collaborative** — water within climate framing; ~₹20-50 cr/year water-touching.
+- **Rainmatter Foundation** — water subset of broader portfolio; ~₹25-50 cr/year.
+- **HCL Foundation** — ~₹15-30 cr/year water-embedded.
+- **Sehgal, Bharti, Hero, Wipro, Edelgive, Bajaj** — collectively ~₹30-60 cr/year.
+
+The Indian philanthropy total at the line-item level lands at ~₹250-450 cr/year of water-attributable spend, lower than the ₹500-1,500 cr/year in the flow read above (which included the broader climate-pool envelope and a wider attribution method).
+
+**Then foreign philanthropy** — Gates India + Bloomberg + Ford + MacArthur + Wellcome + WaterAid global + Rockefeller + episodic — collectively ~₹500-900 cr/year, declining post-2020 FCRA tightening.
+
+**Then impact + blended finance** — Aavishkaar, Acumen, Caspian, Asha Impact, Lok, Unitus, Insitor, Ankur, WRG 2030, NABARD watershed loans, IIFCL water bonds — collectively ~₹200-500 cr/year, deal flow thin.
+
+**Then diaspora + crowdfunding + alumni endowments** — Indiaspora, AIF, Milaap + Ketto water campaigns, IITB Heritage Fund + IIMA Endowment water-touching — ~₹50-100 cr/year quantified, almost certainly underestimated due to attribution difficulty.
+
+The shape: **government schemes deploy 90%+ of annual disbursement; the remaining 10% is where philanthropic + civic shape decides everything else.** A ₹50 cr/year water-pure philanthropic bet sits four orders of magnitude below JJM 2.0's annual flow. That is the leverage problem. It is also the leverage opportunity — at the rupee scale where weight is impossible, *shape* becomes everything.
+
+## The leverage map
+
+The implicit assumption behind philanthropic + civic water funding is that ₹1 of patient capital can shape ₹10-15 of state capital — through co-design, evidence, capacity, narrative, or coalition. The honest read across two decades of Indian water philanthropy is that the realised multiplier is closer to **₹1 → ₹3-5**, well below what the theory of change requires.
+
+Three failure modes explain the gap.
+
+**Fungibility.** Government allocations move on political schedules, not philanthropic ones. Arghyam-funded design thinking on Atal Bhujal flows into a ₹6,000 cr World Bank co-financed scheme — but the scheme would have moved with or without the design input, and the state counterpart funding shifts to other priorities the moment the philanthropic engagement ends. The ₹6,000 cr is *correlated*, not *caused*. Pure attribution is rarely defensible past 1.5x.
+
+**Implementation gap.** Multilateral capital books at headline numbers ($2.6B World Bank India water portfolio); 15-20% of that is undeployed at any moment due to state counterpart funding gaps + procurement bottlenecks + capacity constraints. The DFI commitment is real on paper; the leverage on philanthropic accelerator capital is partial.
+
+**Coordination failure.** Arghyam designs gram panchayat water security plans. MGNREGA engineers build assets to siloed specifications. The two flows pass each other without information transfer. Philanthropic design quality does not propagate to scheme execution because the scheme is staffed by line-department engineers operating on departmental templates. Closing this gap requires structural co-staffing or cross-program technical assistance — both rare.
+
+The two visible cases where philanthropic leverage approached **₹1 → ₹10** are worth naming, because they are the existence proof and the comparison.
+
+- **Atal Bhujal Yojana co-design.** Arghyam, INREM, ACWADAM, Foundation for Ecological Security collectively shaped the participatory groundwater management methodology that became the heart of ABY. Philanthropic input over ~5 years (well below ₹50 cr cumulative) shaped a ₹6,000 cr scheme. ~₹1 → ₹100+ is the upper bound of what is theoretically possible; in practice the realised co-design leverage on ABY was probably ₹1 → ₹15-25 once second-order propagation through state implementation is conservatively counted.
+- **PMKSY watershed convergence.** Foundation for Ecological Security + WASSAN + Rainmatter-network NGOs over a decade have shaped the participatory commons component of WDC-PMKSY. Philanthropic spend across the contributing organisations cumulative ~₹100-200 cr; aligned PMKSY watershed budget into participatory-shaped delivery directionally ~₹2,500-3,500 cr. ~₹1 → ₹15-30 leverage.
+
+What the high-leverage cases share, mechanistically:
+
+- **Long-horizon engagement** — 8-15 years of continuous relationship with the same scheme, surviving multiple administrations.
+- **Methodology is the deliverable**, not the project — i.e., the philanthropic spend produced the *operating method* that the scheme then adopted, not just isolated pilots.
+- **Embedded technical assistance** — philanthropic-funded staff sitting inside or alongside scheme implementation, not arms-length advisory.
+- **State-government partnership signed at the deputy-secretary level**, not just programme level — the institutional permission survives officer transfers.
+
+What the low-leverage cases share:
+
+- **Short-cycle pilot funding** that ends before the scheme cycle does.
+- **Project framing rather than methodology framing** — village water security plans get built; the methodology to build them at scale across the country never crystallises.
+- **NGO intermediation without state co-staffing** — philanthropic capital reaches NGOs, NGOs work in villages, the state scheme does not change.
+
+The implication for `build-plan.md`: a public-good water information build that hopes for ₹1 → ₹10 leverage on government water schemes (₹500-1,000 cr civic build → ₹5,000-10,000 cr scheme reshaping over 10 years) has to design from the start for the four high-leverage features — long horizon, methodology-as-deliverable, embedded TA, deputy-secretary-level institutional permission. None is a CSR habit; most are not even philanthropic habits.
+
+## Capture risks worth ₹3,000+ cr/year
+
+Capture is the polite word for the routine failures that sit underneath the headline disbursement numbers — money flowing at announced scale but landing without the announced outcome. Four named risks, each large enough to matter, and each in different layers.
+
+**1. Corporate "water-positive" greenwashing — ₹800-1,200 cr/yr at risk of being fictional offset accounting.** The Companies Act 2013 mandates 2% CSR; companies with material water dependence (beverages, FMCG, mining, manufacturing, increasingly data centres) report water-positive claims that count distant watershed work as 1:1 against local extraction. Coca-Cola Kaladera (Rajasthan) is the canonical case — 110 recharge shafts built, satellite-observed groundwater depletion in the block worsened over the same period; the claim and the reality diverge, the audit trail does not exist. The data-centre cluster (Sify, CtrlS, Nxtra, AdaniConneX, plus the hyperscaler captives in Hyderabad + Mumbai + Chennai) carries water-positive claims with no consumption disclosure for FY23-24. HUL's Suvidha programme reports water savings that exclude the embedded water in cotton + palm oil supply chains. Independent third-party verification under a published methodology covers a small minority of total claimed replenishment — directionally **30-40% verified, 60-70% unverified**. The CSR aggregate water + sanitation spend is ₹7,000-10,000 cr/year (per the existing flow read above); the water-positive replenishment-claim subset is plausibly ₹800-1,200 cr/year of which independent verification covers a fraction. The capture is not corruption; it is methodological permissiveness in the absence of any standard. SEBI's 2025 ESG disclosure rules require water reporting; they do not yet require third-party audit + penalty. **An audit cost on the order of ₹30-50 cr could verify the entire claim envelope** — a fraction of the at-risk amount.
+
+**2. JJM functionality cliff — ₹2,000-3,000 cr/year of CapEx at risk of becoming dysfunctional.** JJM 1.0 + 2.0 will have built ~16-19 cr functional household tap connections by Dec 2028 if the coverage trajectory holds. CAG audits 2022 + 2024 documented that "functional" is being measured at installation, not at continuous service. Field-level estimates of *actual* functionality (water reaches the tap, water is potable, the scheme is operational year-round) cluster around 40-55% of installed connections under post-warranty O&M conditions. Post-Dec 2028, O&M shifts to gram panchayats; the per-HH O&M cost (~₹50-100/yr at typical scheme economics) maps to a national O&M envelope of ~₹1,500-2,500 cr/year that is currently unbudgeted in any state finance commission award. The 16th Finance Commission (report due Mar 2026) is the bet-the-farm signal on whether O&M is funded. If the answer is no — and the historical pattern of GP-level O&M financing does not encourage optimism — the trajectory is for **30-40% of new connections to slide back to non-functional by 2032**, rendering ₹2,000-3,000 cr/year of CapEx unproductive over a 5-year window. The political capture is in the KPI choice: coverage is countable, functionality is not, and the political cost of measuring functionality is acute.
+
+**3. MGNREGA water-asset measurement failure — ~₹2,000-3,000 cr/year unmeasured loss.** MGNREGA water assets — farm ponds, check dams, soak pits, recharge structures, well construction — flow at ~₹40,000-50,000 cr/year if the 60% assets-water rule holds against the ~₹86,000 cr/year MGNREGA outlay. CAG audits routinely flag asset durability — desilted tanks revert to weeds within 18 months in 20-30% of cases, check dams collapse in monsoons that the design did not anticipate, soak pits silt up in seasons the maintenance budget didn't cover. The capture is in the incentive design: MGNREGA bonus payments to states are tied to asset *creation*, not asset *durability* or *water outcome*. District engineers game metrics by counting partial work as full and treating maintenance as a separate (unfunded) line. If 20-25% of MGNREGA water-asset spend is wasted on low-durability work, the unmeasured loss sits at **~₹2,000-3,000 cr/year**. The first-order fix — couple disbursement to a 3-year asset-functionality audit by an independent agency — is a Section 8 / civic implementation candidate, not a scheme-internal one, because the political cost of slowing disbursement is higher than the political reward for verifying durability.
+
+**4. Finance Commission devolution fungibility — ~₹1,500-2,000 cr/year leak from earmarked water + sanitation grants.** The 15th Finance Commission allocated 30% of PRI grants for water + sanitation; cumulative ~₹1.42 lakh cr through FY25-26. GP revenue elasticity is negative (property tax collection sub-30% in even the better-collecting states); the earmark gets absorbed into salaries + maintenance + administrative bills as soon as it lands. CapEx on water + sanitation infrastructure that the earmark was supposed to fund happens at much lower realisation. Quantified leak: directionally **₹1,500-2,000 cr/year** of the annual earmark turning into operations rather than the assets it was earmarked for. The 16th Finance Commission can technically tighten the earmark — making it tied + audited at the asset level — but historical Finance Commission posture is to defer to state autonomy on devolution use, which is precisely the political argument the leak is exploiting.
+
+**Aggregate capture envelope: ₹3,000-5,000 cr/year of disbursement that does not produce its claimed outcome**, distributed across CSR + JJM O&M + MGNREGA asset durability + FC devolution leak. This is comparable in scale to the entire annual Indian philanthropic + foreign philanthropic + impact-finance water layer combined. *Closing the capture is a higher-leverage move than expanding the philanthropic envelope.* The closing tools — third-party audit, functionality-tied disbursement, independent durability monitoring, asset-level fungibility constraints — are exactly the public-good information system the rest of this folder argues for.
+
+## The 5-year forward look — six dated signals to watch
+
+The funding ecosystem is not stationary. Six dated signals over the next five years will decide whether the Indian water-funding architecture moves toward or away from the public-good information shape this folder argues for.
+
+**1. JJM 2.0 cliff — December 2028.** Central allocation for new connections ends. Whether the 16th Finance Commission report (due **March 2026**) earmarks O&M funding for the ~16-19 cr handed-over connections is the single largest binary signal in the 5-year horizon. Earmark large enough → JJM 2.0 transitions into a sustained service. Earmark small or fungible → ~30-40% of CapEx slides into dysfunction by 2032 (see capture risks). The signal is in March 2026, not December 2028; the cliff is already determined by the Commission's posture a year before it manifests.
+
+**2. AMRUT 3.0 announcement — Q4 FY26 watch.** AMRUT 2.0 is on its trajectory toward ~70-75% physical progress by FY26 close. A Phase 3 announcement — most plausibly oriented around water-reuse + sewage recycling + non-revenue-water tariff reform in Tier-2 + Tier-3 cities — would reshape the urban water funding map for FY27-32 (₹1.5-2 lakh cr is the plausible envelope, lower than Phase 2 in headline but higher in *intensity* per city). Absence of Phase 3 announcement by Q4 FY26 → urban water shifts onto state finance + DFI loans + municipal bonds, with the financing risk substantially worse for capacity-constrained ULBs.
+
+**3. National Water Commission framework — 2027 watch.** The Mihir Shah Committee proposal (2016) to merge CWC + CGWB into a unified National Water Commission has sat dormant for a decade. A revived recommendation — most plausibly tied to a National Water Framework Bill in Parliament — would shift institutional gravity from drinking-water-supply (DDWS, Jal Shakti) to **basin authority + hydrological commons** framing. The signal is the inter-state allocation environment: if Cauvery, Krishna, Indus tribunals continue to absorb political oxygen without resolution through 2026-27, pressure for a basin-authority architecture rises. If 2027 passes without movement, the framework debate is deferred another decade — and water remains administered as a supply-side scheme rather than as a basin-scale commons.
+
+**4. Climate + adaptation finance scaling — 2-3% of total water spend today, 8-10% plausible by 2030.** Green Climate Fund India approvals (currently ~$782M cumulative, water-relevant share ~25%) + Adaptation Fund + Green India Mission water components + state-level transition bonds + water-relevant transition finance under SEBI 2024 guidelines collectively run at ~₹800-1,200 cr/year today. The 5-year forward trajectory is shaped by: (a) whether the National Adaptation Plan (in preparation since 2018, repeatedly delayed) lands by 2027 with explicit water provisions; (b) whether SEBI water-transition disclosures harden into mandatory third-party audit; (c) whether multilateral lenders shift more of their India water portfolio under climate-adaptation envelopes (likely, given the green-finance reporting incentives in donor capitals). A reasonable forecast lands climate-adaptation water finance at ~₹3,000-4,000 cr/year by 2030 — meaningful as a complement, not a substitute for the JJM/AMRUT scale.
+
+**5. CSR water plateau at ₹7,000-10,000 cr/year through 2030, with a *quality* shift.** CSR water + sanitation aggregate has plateaued for three years; corporates facing FY25-26 profit pressure are tilting CSR toward health + education (higher reporting ROI, easier outcome storytelling). Within the plateau, the visible shift is from supply-side infrastructure (already substantively delivered by JJM/AMRUT) toward demand-side behaviour change (water literacy, hygiene), corporate-supply-chain water (cotton, palm oil, dairy) under SEBI ESG pressure, and water-positive *audit trails* under shareholder pressure. The 5-year forecast: CSR rupee weight stays ₹1,200-1,500 cr/year on water-attributable, but the rupee shape moves measurably toward audited replenishment + supply-chain water + outcome-tied CSR contracts. **A high-profile audit failure in 2026-28 — a major water-positive corporate claim publicly debunked — is the single highest-impact event possible in this layer.** Whether anyone is preparing that case is the live question.
+
+**6. Philanthropic inflection — ₹400-600 cr → ₹600-900 cr by 2030, with composition change.** Three forces: (i) Arghyam endowment compounding through deployed assets, payout climbing modestly to ~₹50-80 cr/year; (ii) Rainmatter $200M envelope plausibly fully deployed by 2027-28, with a probable second pledge given Zerodha profitability and founder commitment; (iii) new entrants — Paytm + PharmEasy + Razorpay + Postman + Cred founder cohorts have begun visible philanthropic posture, and 2-3 are plausible candidates to anchor water-pure or water-major foundations at ₹100-300 cr commitments through 2030. The composition shift: away from infrastructure (handled by state schemes) toward commons governance + data + policy + legal reform — exactly the public-good information layer this folder argues for. **The 5-year window where a second Arghyam-class water-pure philanthropy could emerge is plausibly the highest-priority recruiting target in the entire ecosystem.**
+
+A seventh dated signal worth flagging, though it sits outside the funding architecture proper: **the next acute urban water crisis** — Bengaluru Day Zero (a near miss in 2024-25), Chennai Day Zero (a hit in 2019), Hyderabad on the trajectory, Pune entering visible stress. Each near-Day-Zero compounds the urban middle-class political demand for honest water information (`stakeholders.md`). One full Day-Zero in a Tier-1 city in 2026-28 is plausibly the political event that creates the constituency for a public-good water build that no current funding architecture has manufactured. Whether the build is *ready* when that constituency arrives is the bet behind `build-plan.md`'s parallel-build sequencing.
+
+## The whitespace, mapped to the seven-layer stack
+
+The capture risks + the dated signals together identify where ₹100-500 cr civic-side capital can decisively shape outcomes that the ₹2.5-3.5 lakh cr/year state envelope cannot reach. Six candidate seeds, each mapped to the `gaps.md` layer it primarily fills:
+
+- **Groundwater commons monitoring infrastructure (~₹200-300 cr, 7-10 years)** — Layers 1 + 3 (sensing + verification). 10,000 community piezometers + Bhujal Jankar institutional muscle scaled 10×, holding the abstraction visibility that closes the most consequential dark-data gap (`data-and-groundtruth.md`). Highest-leverage single bet on this list.
+- **Water data interoperability layer (~₹50-100 cr, 3-5 years)** — Layer 2 (integration). Federated open API across IMD + CWC + CGWB + CPCB + state PCBs + ISRO + state water authorities; common spatial reference, common units, common time stamps; the National Water Information System the Mihir Shah Committee proposed institutionally and that the technical work could prefigure civic-side. Multiplier on every other layer above.
+- **Urban wetland legal + financing framework (~₹50-80 cr, 5-7 years)** — Layer 6 (decision/enforcement). Statutory protection plus a wetland-bond architecture (debt instruments backed by city water-savings from restored wetlands), targeted at the 50 cities losing wetlands fastest. Bengaluru-Lake-Fest trajectory scaled with legal infrastructure that survives political turnover.
+- **Water-builder apprenticeship network (~₹80-120 cr, 7-10 years)** — Layers 1 + 6 (sensing capacity + decision capacity). 500 apprenticeship centres + 200 master trainers + 100,000 certified water builders by 2033. The labour-side of the JJM 2.0 O&M cliff — the people who keep the assets functional for the decade after the CapEx ends.
+- **Citizen sensor network (~₹40-60 cr, 3-5 years)** — Layer 1 (sensing) and Layer 3 (verification). 10,000 community quality kits + offline mobile + government-data-ingestion, enabling 48-hour detection cycles on contamination versus the current 6-month government cycle. Disease cluster prevention at ground-truth speed.
+- **Basin observatory network (~₹100-150 cr, 7-10 years)** — Layer 5 (modeling). 10-15 basin digital twins (Ganga, Brahmaputra, Godavari, Krishna, Cauvery, Indus tributaries, Mahanadi, Narmada, Tapi, plus 3-4 sub-basins of strategic interest), continuously updated, integrated with rainfall + storage + abstraction + quality + climate scenarios. The basin-scale governance precondition for any allocation reform.
+
+Aggregate envelope: **~₹520-810 cr capex over 10 years** — within the ₹500-1,000 cr ask the README anticipates for `build-plan.md`. The six are not independent; the data-interoperability layer carries every other layer's data; the apprenticeship network supplies the labour for the sensing networks; the basin observatory consumes the federated APIs that interoperability builds. The construction logic — sequencing, capital structure, founding team, risk register — sits in `build-plan.md`. This file's job is to argue that the capital to fund all six exists in aggregate, the vehicle does not, and constructing the vehicle is the upstream move.
